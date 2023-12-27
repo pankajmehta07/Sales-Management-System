@@ -1,0 +1,22 @@
+#include<wx/wx.h>
+#include"id.h"
+#include"MenuFrame.h"
+#include"AddObjectFrame.h"
+#include"SellObjectFrame.h"
+#include"BuyObjectFrame.h"
+#include"ShowObjectFrame.h"
+
+class myApp : public wxApp{
+    public:
+        virtual bool OnInit();
+} ;
+
+
+// wxDECLARE_APP(myApp);
+wxIMPLEMENT_APP(myApp);
+bool myApp::OnInit(){
+    // wxWindow::SetMinSize(500);
+    MenuFrame *frame = new MenuFrame(wxT("Sales Management Package"),wxPoint(50,50),wxSize(700,600));
+    frame -> Show(true);
+    return true;
+}
