@@ -36,7 +36,7 @@ wxEND_EVENT_TABLE();
 
 MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size):wxFrame(NULL,wxID_ANY,title,pos,size){
     // SetIcon(wxIcon(wxT("photo.ico")));
-    SetMinSize(wxSize(600,400));
+    SetMinSize(wxSize(600,520));
     
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(menu::wxID_HELLO, "&Hello...\tCtrl-H", "Help string shown in status bar for this menu item");
@@ -57,11 +57,45 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
 
     // Menu Contents
 
-    wxBoxSizer* MenuSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* MainSizer = new wxBoxSizer(wxVERTICAL);
+
+    wxPanel* SellerPanel = new wxPanel(this,wxID_ANY);
+    // SellerPanel->SetBackgroundColour(wxColour(120,23,123));
+    MainSizer->Add(SellerPanel,0,wxALIGN_CENTER|wxEXPAND|wxALL);
+
+    wxBoxSizer* SellerPanelSizer=new wxBoxSizer(wxVERTICAL);
+    SellerPanel->SetSizer(SellerPanelSizer);
+
+
+    SellerPanelSizer->Add(0,20);
+    wxStaticText* SellerName = new wxStaticText(SellerPanel,wxID_ANY,wxT("Seller Name"));
+    wxFont font1(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+    SellerName->SetFont(font1);
+    SellerPanelSizer->Add(SellerName,1,wxALIGN_CENTER|wxALL,0);
+    wxStaticText* SellerAddress1 = new wxStaticText(SellerPanel,wxID_ANY,wxT("Thapathali, Kathmandu-11, Kathmandu"));
+    wxFont font2(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL);
+    SellerAddress1->SetFont(font2);
+    SellerPanelSizer->Add(SellerAddress1,1,wxALIGN_CENTER|wxALL,0);
+    wxStaticText* SellerAddress2 = new wxStaticText(SellerPanel,wxID_ANY,wxT("Bagmati,Nepal"));
+    SellerAddress2->SetFont(font2);
+    SellerPanelSizer->Add(SellerAddress2,1,wxALIGN_CENTER|wxALL,0);
+    wxStaticText* SellerPhoneNumber = new wxStaticText(SellerPanel,wxID_ANY,wxT("Tel: 01-6898964"));
+    wxFont font3(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL);
+    SellerPhoneNumber->SetFont(font3);
+    SellerPanelSizer->Add(SellerPhoneNumber,1,wxALIGN_CENTER|wxALL,0);
+
+    SellerPanelSizer->Add(0,8);
+
+    wxStaticLine* separatorLine = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
+    wxColour separatorColour(150,150,150);
+    separatorLine->SetForegroundColour(separatorColour);
+    separatorLine->SetBackgroundColour(separatorColour);
+    separatorLine->SetSize(wxDefaultCoord, wxDefaultCoord, wxDefaultCoord, 2);
+    MainSizer->Add(separatorLine, 0, wxEXPAND | wxALL, 3);
     
     wxPanel* MenuPanel = new wxPanel(this,wxID_ANY);
-    MenuPanel->SetBackgroundColour(wxColour(200,200,100));
-    MenuSizer->Add(MenuPanel,1,wxALIGN_CENTER|wxEXPAND);
+    // MenuPanel->SetBackgroundColour(wxColour(200,200,100));
+    MainSizer->Add(MenuPanel,1,wxALIGN_CENTER|wxEXPAND);
     wxBoxSizer* MenuPanelSizer = new wxBoxSizer(wxVERTICAL);
     MenuPanel->SetSizer(MenuPanelSizer);
 
@@ -74,7 +108,7 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
             ModifyButtonClick(MenuPanel);
         });
 
-    MenuPanelSizer->Add(0,60);
+    MenuPanelSizer->Add(0,40);
 
     MenuPanelSizer->Add(BuyObjectButton,0,wxALIGN_CENTER|wxALL,5);
     MenuPanelSizer->Add(AddObjectButton,0,wxALIGN_CENTER|wxALL,5);
@@ -83,11 +117,11 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
 
 
     Centre();
-    SetSizer(MenuSizer);
+    SetSizer(MainSizer);
 
 
     CreateStatusBar();
-    SetStatusText(_("Status Bar"));
+    SetStatusText(wxT("Status Bar"));
 }
 
 

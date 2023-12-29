@@ -5,5 +5,4 @@ namespace menu{
     int modifyButtonId = addButtonId+1;
     int buyButtonId = modifyButtonId+1;
     int searchButtonId = buyButtonId+1;
-
 }

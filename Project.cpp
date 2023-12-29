@@ -1,4 +1,6 @@
 #include<wx/wx.h>
+#include<wx/textctrl.h>
+#include <wx/statline.h>
 #include"id.h"
 #include"MenuFrame.h"
 #include"AddObjectFrame.h"
