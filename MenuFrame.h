@@ -14,6 +14,7 @@ class MenuFrame : public wxFrame{
         // Buttons Click 
         void AddButtonClick(wxCommandEvent& event);
         void BuyButtonClick(wxCommandEvent& event);
+        void SellButtonClick(wxCommandEvent& event);
         void SearchButtonClick(wxCommandEvent& event);
         void ModifyButtonClick(wxPanel*);
         wxDECLARE_EVENT_TABLE();
@@ -28,6 +29,7 @@ wxBEGIN_EVENT_TABLE(MenuFrame, wxFrame)
 
     EVT_BUTTON(menu::addButtonId,MenuFrame::AddButtonClick)
     EVT_BUTTON(menu::buyButtonId,MenuFrame::BuyButtonClick)
+    EVT_BUTTON(menu::sellButtonId,MenuFrame::SellButtonClick)
     EVT_BUTTON(menu::searchButtonId,MenuFrame::SearchButtonClick)
 wxEND_EVENT_TABLE();
 
@@ -36,7 +38,7 @@ wxEND_EVENT_TABLE();
 
 MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size):wxFrame(NULL,wxID_ANY,title,pos,size){
     // SetIcon(wxIcon(wxT("photo.ico")));
-    SetMinSize(wxSize(600,520));
+    SetMinSize(wxSize(600,540));
     
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(menu::wxID_HELLO, "&Hello...\tCtrl-H", "Help string shown in status bar for this menu item");
@@ -100,6 +102,7 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     MenuPanel->SetSizer(MenuPanelSizer);
 
     wxButton*  BuyObjectButton= new wxButton(MenuPanel,menu::buyButtonId,"Buy ");
+    wxButton*  SellObjectButton= new wxButton(MenuPanel,menu::sellButtonId,"Sell ");
     wxButton* AddObjectButton = new wxButton(MenuPanel,menu::addButtonId,"Add Item ");
     wxButton* ModifyObjectButton = new wxButton(MenuPanel,menu::modifyButtonId,"Modify ");
     wxButton* SearchObjectButton = new wxButton(MenuPanel,menu::searchButtonId,"Search ");
@@ -111,6 +114,7 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     MenuPanelSizer->Add(0,40);
 
     MenuPanelSizer->Add(BuyObjectButton,0,wxALIGN_CENTER|wxALL,5);
+    MenuPanelSizer->Add(SellObjectButton,0,wxALIGN_CENTER|wxALL,5);
     MenuPanelSizer->Add(AddObjectButton,0,wxALIGN_CENTER|wxALL,5);
     MenuPanelSizer->Add(ModifyObjectButton,0,wxALIGN_CENTER|wxALL,5);
     MenuPanelSizer->Add(SearchObjectButton,0,wxALIGN_CENTER|wxALL,5);
@@ -172,6 +176,9 @@ void MenuFrame::ModifyButtonClick(wxPanel* panel){
 }
 void MenuFrame::AddButtonClick(wxCommandEvent& event){
     wxMessageBox(_("Add Button Clicked"));
+}
+void MenuFrame::SellButtonClick(wxCommandEvent& event){
+    wxMessageBox(_("Sell Button Clicked"));
 }
 void MenuFrame::BuyButtonClick(wxCommandEvent& event){
     wxMessageBox(_("Buy Button Clicked"));
