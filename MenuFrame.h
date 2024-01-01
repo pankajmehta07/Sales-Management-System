@@ -1,3 +1,6 @@
+#ifndef MENU_FRAME_H
+#define MENU_FRAME_H
+
 class MenuFrame : public wxFrame{
     public:
         MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size);
@@ -12,13 +15,18 @@ class MenuFrame : public wxFrame{
         void OnAbout(wxCommandEvent& event);
         void onClose(wxCloseEvent& event);
         // Buttons Click 
-        void AddButtonClick(wxCommandEvent& event);
+        void ModifyButtonClick(wxCommandEvent& event);
         void BuyButtonClick(wxCommandEvent& event);
         void SellButtonClick(wxCommandEvent& event);
         void SearchButtonClick(wxCommandEvent& event);
-        void ModifyButtonClick(wxPanel*);
+        void AddButtonClick(wxFrame*,wxPanel*);
         wxDECLARE_EVENT_TABLE();
 };
+
+
+
+#include "AddObjectFrame.h"
+class AddObjectFrame;
 
 
 wxBEGIN_EVENT_TABLE(MenuFrame, wxFrame)
@@ -27,7 +35,7 @@ wxBEGIN_EVENT_TABLE(MenuFrame, wxFrame)
     EVT_MENU(wxID_EXIT, MenuFrame::OnQuit)
     EVT_CLOSE(MenuFrame::onClose)
 
-    EVT_BUTTON(menu::addButtonId,MenuFrame::AddButtonClick)
+    EVT_BUTTON(menu::modifyButtonId,MenuFrame::ModifyButtonClick)
     EVT_BUTTON(menu::buyButtonId,MenuFrame::BuyButtonClick)
     EVT_BUTTON(menu::sellButtonId,MenuFrame::SellButtonClick)
     EVT_BUTTON(menu::searchButtonId,MenuFrame::SearchButtonClick)
@@ -107,8 +115,8 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     wxButton* ModifyObjectButton = new wxButton(MenuPanel,menu::modifyButtonId,"Modify ");
     wxButton* SearchObjectButton = new wxButton(MenuPanel,menu::searchButtonId,"Search ");
 
-    ModifyObjectButton->Bind(wxEVT_BUTTON, [this, MenuPanel](wxCommandEvent& event) {
-            ModifyButtonClick(MenuPanel);
+    AddObjectButton->Bind(wxEVT_BUTTON, [this, MenuPanel](wxCommandEvent& event) {
+            AddButtonClick(this,MenuPanel);
         });
 
     MenuPanelSizer->Add(0,40);
@@ -169,13 +177,14 @@ void MenuFrame::SearchButtonClick(wxCommandEvent& event){
     
     // this->Show(false);
 }
-void MenuFrame::ModifyButtonClick(wxPanel* panel){
-    wxMessageBox(_("Modify Button Clicked "+panel->GetName()));
-    
-    // this->Show(false);
+void MenuFrame::AddButtonClick(wxFrame* frame,wxPanel* panel){
+    AddObjectFrame* addFrame = new AddObjectFrame(wxT("Sales Management Package"),wxPoint(50,50),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
+    frame->Close(true);
+    addFrame->Show(true);
+
 }
-void MenuFrame::AddButtonClick(wxCommandEvent& event){
-    wxMessageBox(_("Add Button Clicked"));
+void MenuFrame::ModifyButtonClick(wxCommandEvent& event){
+    wxMessageBox(_("Modify Button Clicked"));
 }
 void MenuFrame::SellButtonClick(wxCommandEvent& event){
     wxMessageBox(_("Sell Button Clicked"));
@@ -183,3 +192,7 @@ void MenuFrame::SellButtonClick(wxCommandEvent& event){
 void MenuFrame::BuyButtonClick(wxCommandEvent& event){
     wxMessageBox(_("Buy Button Clicked"));
 }
+
+
+
+#endif
