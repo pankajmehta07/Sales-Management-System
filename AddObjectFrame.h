@@ -1,7 +1,33 @@
 #ifndef ADD_OBJECT_FRAME_H
 #define ADD_OBJECT_FRAME_H
+
 // class MenuFrame;
 #include"MenuFrame.h"
+
+
+class MyScrolledWindow : public wxScrolledWindow {
+public:
+    MyScrolledWindow(wxWindow* parent, wxWindowID id = wxID_ANY, int scrollbarOrientation = wxBOTH)
+        : wxScrolledWindow(parent, id)
+    {
+        // Set up the scrollbar
+        SetScrollbar(scrollbarOrientation, 0, 10, 100);
+        // SetScrollbar(wxVERTICAL, 0, 10, 100);
+        SetScrollRate(5, 5);
+    }
+
+private:
+    // Event handlers, if needed
+
+    wxDECLARE_EVENT_TABLE();
+};
+
+wxBEGIN_EVENT_TABLE(MyScrolledWindow, wxScrolledWindow)
+    // Event handling, if needed
+wxEND_EVENT_TABLE()
+
+
+
 class AddObjectFrame : public wxFrame{
     public:
         AddObjectFrame(const wxString& title,const wxPoint& pos,const wxSize& size);
@@ -42,7 +68,7 @@ wxEND_EVENT_TABLE();
 
 AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wxSize& size):wxFrame(NULL,wxID_ANY,title,pos,size){
     // SetIcon(wxIcon(wxT("photo.ico")));
-    SetMinSize(wxSize(600,540));
+    SetMinSize(wxSize(100,100));
     
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(add::wxID_HELLO, "&Hello...\tCtrl-H", "Help string shown in status bar for this menu item");
@@ -99,11 +125,13 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
     separatorLine->SetSize(wxDefaultCoord, wxDefaultCoord, wxDefaultCoord, 2);
     MainSizer->Add(separatorLine, 0, wxEXPAND | wxALL, 3);
     
-    wxPanel* MenuPanel = new wxPanel(this,wxID_ANY);
+    MyScrolledWindow* MenuPanel = new MyScrolledWindow(this,wxID_ANY);
     // MenuPanel->SetBackgroundColour(wxColour(200,200,100));
     MainSizer->Add(MenuPanel,1,wxALIGN_CENTER|wxEXPAND);
     wxBoxSizer* MenuPanelSizer = new wxBoxSizer(wxVERTICAL);
     MenuPanel->SetSizer(MenuPanelSizer);
+    // SetScrollbar(wxVERTICAL, 0, 10, 100);
+    // MenuPanel->SetScrollRate(5, 5);
 
     wxButton*  BuyObjectButton= new wxButton(MenuPanel,add::buyButtonId,"Add-> Buy ");
     wxButton*  SellObjectButton= new wxButton(MenuPanel,add::sellButtonId,"Add-> Sell ");
@@ -174,7 +202,7 @@ void AddObjectFrame::SearchButtonClick(wxCommandEvent& event){
     // this->Show(false);
 }
 void AddObjectFrame::MenuButtonClick(wxFrame* frame,wxPanel* panel){
-    MenuFrame* addframe = new MenuFrame(wxT("Sales Management Package"),wxPoint(50,50),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
+    MenuFrame* addframe = new MenuFrame(wxT("Byappar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
     addframe->Show(true);
     frame->Close(true);
 }
