@@ -18,7 +18,7 @@ class myApp : public wxApp{
 wxIMPLEMENT_APP(myApp);
 bool myApp::OnInit(){
     // wxWindow::SetMinSize(500);
-    MenuFrame *Menuframe = new MenuFrame(wxT("Byappar"),wxPoint(50,50),wxSize(700,600));
+    MenuFrame *Menuframe = new MenuFrame(wxT("Byapar"),wxPoint(50,50),wxSize(700,600));
     Menuframe -> Show(true);
     return true;
 }

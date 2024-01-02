@@ -202,7 +202,7 @@ void AddObjectFrame::SearchButtonClick(wxCommandEvent& event){
     // this->Show(false);
 }
 void AddObjectFrame::MenuButtonClick(wxFrame* frame,wxPanel* panel){
-    MenuFrame* addframe = new MenuFrame(wxT("Byappar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
+    MenuFrame* addframe = new MenuFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
     addframe->Show(true);
     frame->Close(true);
 }
