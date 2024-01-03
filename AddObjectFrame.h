@@ -35,6 +35,7 @@ class AddObjectFrame : public wxFrame{
     private:
     wxPanel* MenuPanel;
     wxBoxSizer* MenuPanelSizer;
+    wxTextCtrl* textCtrl;
 
     // Menu Click 
         void OnQuit(wxCommandEvent& event);
@@ -43,10 +44,11 @@ class AddObjectFrame : public wxFrame{
         void onClose(wxCloseEvent& event);
         // Buttons Click 
         void ModifyButtonClick(wxCommandEvent& event);
+        void AddItem(MyScrolledWindow*,wxBoxSizer*);
         void BuyButtonClick(wxCommandEvent& event);
         void SellButtonClick(wxCommandEvent& event);
         void SearchButtonClick(wxCommandEvent& event);
-        void MenuButtonClick(wxFrame*,wxPanel*);
+        void MenuButtonClick(wxFrame*);
         wxDECLARE_EVENT_TABLE();
 };
 
@@ -68,7 +70,7 @@ wxEND_EVENT_TABLE();
 
 AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wxSize& size):wxFrame(NULL,wxID_ANY,title,pos,size){
     // SetIcon(wxIcon(wxT("photo.ico")));
-    SetMinSize(wxSize(100,100));
+    SetMinSize(wxSize(600,540));
     
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(add::wxID_HELLO, "&Hello...\tCtrl-H", "Help string shown in status bar for this menu item");
@@ -130,26 +132,39 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
     MainSizer->Add(MenuPanel,1,wxALIGN_CENTER|wxEXPAND);
     wxBoxSizer* MenuPanelSizer = new wxBoxSizer(wxVERTICAL);
     MenuPanel->SetSizer(MenuPanelSizer);
-    // SetScrollbar(wxVERTICAL, 0, 10, 100);
-    // MenuPanel->SetScrollRate(5, 5);
+     for (int i = 0; i < 5; ++i)
+    {
+        wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
+        textCtrl = new wxTextCtrl(MenuPanel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+        textCtrl->SetHint("ID");
+        ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+        textCtrl = new wxTextCtrl(MenuPanel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+        textCtrl->SetHint("Name");
+        ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+        textCtrl = new wxTextCtrl(MenuPanel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+        textCtrl->SetHint("Qty:");
+        ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
 
-    wxButton*  BuyObjectButton= new wxButton(MenuPanel,add::buyButtonId,"Add-> Buy ");
-    wxButton*  SellObjectButton= new wxButton(MenuPanel,add::sellButtonId,"Add-> Sell ");
-    wxButton* MenuObjectButton = new wxButton(MenuPanel,add::menuButtonId,"Add-> Menu ");
-    wxButton* ModifyObjectButton = new wxButton(MenuPanel,add::modifyButtonId,"Add-> Modify ");
-    wxButton* SearchObjectButton = new wxButton(MenuPanel,add::searchButtonId,"Add-> Search ");
+        MenuPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxALL, 10);
+    }
 
-    MenuObjectButton->Bind(wxEVT_BUTTON, [this, MenuPanel](wxCommandEvent& event) {
-            MenuButtonClick(this,MenuPanel);
-        });
+    wxPanel* AddItemPanel = new wxPanel(this,wxID_ANY);
+    MainSizer->Add(AddItemPanel,0,wxALIGN_CENTER|wxEXPAND|wxALL);
+    wxBoxSizer* AddItemSizer=new wxBoxSizer(wxHORIZONTAL);
+    AddItemPanel->SetSizer(AddItemSizer);
+    wxButton* MenuButton = new wxButton(AddItemPanel,add::menuButtonId,"Main Menu");
+    AddItemSizer->Add(MenuButton,0,wxALIGN_LEFT|wxALL,5);
+    wxButton* AddItemButton = new wxButton(AddItemPanel,add::AddItemId,"Add Item");
+    AddItemSizer->Add(AddItemButton,0,wxALIGN_RIGHT|wxALL,5);
 
-    MenuPanelSizer->Add(0,40);
+    AddItemButton->Bind(wxEVT_BUTTON, [this, MenuPanel,MenuPanelSizer](wxCommandEvent& event) {
+            AddItem(MenuPanel,MenuPanelSizer);
+    });
+    MenuButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
+            MenuButtonClick(this);
+    });
 
-    MenuPanelSizer->Add(BuyObjectButton,0,wxALIGN_CENTER|wxALL,5);
-    MenuPanelSizer->Add(SellObjectButton,0,wxALIGN_CENTER|wxALL,5);
-    MenuPanelSizer->Add(MenuObjectButton,0,wxALIGN_CENTER|wxALL,5);
-    MenuPanelSizer->Add(ModifyObjectButton,0,wxALIGN_CENTER|wxALL,5);
-    MenuPanelSizer->Add(SearchObjectButton,0,wxALIGN_CENTER|wxALL,5);
+
 
 
     Centre();
@@ -201,13 +216,30 @@ void AddObjectFrame::SearchButtonClick(wxCommandEvent& event){
     
     // this->Show(false);
 }
-void AddObjectFrame::MenuButtonClick(wxFrame* frame,wxPanel* panel){
+void AddObjectFrame::ModifyButtonClick(wxCommandEvent& event){
+    wxMessageBox(_("Modify Button Clicked "));
+}
+
+void AddObjectFrame::MenuButtonClick(wxFrame* frame){
     MenuFrame* addframe = new MenuFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
     addframe->Show(true);
     frame->Close(true);
 }
-void AddObjectFrame::ModifyButtonClick(wxCommandEvent& event){
-    wxMessageBox(_("Modify Button Clicked"));
+void AddObjectFrame::AddItem(MyScrolledWindow* panel,wxBoxSizer* panelSizer){
+    wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
+    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+    textCtrl->SetHint("ID");
+    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
+    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+    textCtrl->SetHint("Name");
+    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
+    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+    textCtrl->SetHint("Qty:");
+    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
+    panelSizer->Add(ContentSizer, 0, wxEXPAND | wxALL, 10);
+    panelSizer->Layout();
+    panelSizer->FitInside(panel);
+    panel->Refresh();
 }
 void AddObjectFrame::SellButtonClick(wxCommandEvent& event){
     wxMessageBox(_("Sell Button Clicked"));

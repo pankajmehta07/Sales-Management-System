@@ -15,4 +15,5 @@ namespace add{
     int buyButtonId = modifyButtonId+1;
     int sellButtonId = buyButtonId+1;
     int searchButtonId = sellButtonId+1;
+    int AddItemId = searchButtonId+1;
 }

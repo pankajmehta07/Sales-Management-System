@@ -19,7 +19,7 @@ class MenuFrame : public wxFrame{
         void BuyButtonClick(wxCommandEvent& event);
         void SellButtonClick(wxCommandEvent& event);
         void SearchButtonClick(wxCommandEvent& event);
-        void AddButtonClick(wxFrame*,wxPanel*);
+        void AddButtonClick(wxFrame*);
         wxDECLARE_EVENT_TABLE();
 };
 
@@ -63,14 +63,11 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     SetMenuBar(menuBar);
 
 
-
-
     // Menu Contents
 
     wxBoxSizer* MainSizer = new wxBoxSizer(wxVERTICAL);
 
     wxPanel* SellerPanel = new wxPanel(this,wxID_ANY);
-    // SellerPanel->SetBackgroundColour(wxColour(120,23,123));
     MainSizer->Add(SellerPanel,0,wxALIGN_CENTER|wxEXPAND|wxALL);
 
     wxBoxSizer* SellerPanelSizer=new wxBoxSizer(wxVERTICAL);
@@ -115,8 +112,8 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     wxButton* ModifyObjectButton = new wxButton(MenuPanel,menu::modifyButtonId,"Modify ");
     wxButton* SearchObjectButton = new wxButton(MenuPanel,menu::searchButtonId,"Search ");
 
-    AddObjectButton->Bind(wxEVT_BUTTON, [this, MenuPanel](wxCommandEvent& event) {
-            AddButtonClick(this,MenuPanel);
+    AddObjectButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
+            AddButtonClick(this);
         });
 
     MenuPanelSizer->Add(0,40);
@@ -177,7 +174,7 @@ void MenuFrame::SearchButtonClick(wxCommandEvent& event){
     
     // this->Show(false);
 }
-void MenuFrame::AddButtonClick(wxFrame* frame,wxPanel* panel){
+void MenuFrame::AddButtonClick(wxFrame* frame){
     AddObjectFrame* addFrame = new AddObjectFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
     frame->Close(true);
     addFrame->Show(true);
