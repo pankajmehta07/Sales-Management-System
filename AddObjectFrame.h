@@ -138,21 +138,40 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
     wxBoxSizer* contentPanelSizer = new wxBoxSizer(wxVERTICAL);
     contentPanel->SetSizer(contentPanelSizer);
 
+    wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
+    ContentSizer->Add(20,0);
+    wxStaticText* text= new wxStaticText(contentPanel,wxID_ANY,wxT("  ID  "));
+    text->SetFont(font2);
+    ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->AddStretchSpacer();
+    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Product Name"));
+    text->SetFont(font2);
+    ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->AddStretchSpacer();
+    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Quantity  "));
+    text->SetFont(font2);
+    ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->Add(20,0);    
+
+    contentPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxALL, 10);
+
     
      for (int i = 0; i < 2; ++i)
     {
         wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-        textCtrl = new wxTextCtrl(contentPanel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+        textCtrl = new wxTextCtrl(contentPanel,wxID_ANY,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
         textCtrl->SetHint("ID");
         ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
-        textCtrl = new wxTextCtrl(contentPanel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+        ContentSizer->AddStretchSpacer();
+        textCtrl = new wxTextCtrl(contentPanel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxSize(350,35), 0);
         textCtrl->SetHint("Name");
         ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
-        textCtrl = new wxTextCtrl(contentPanel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+        ContentSizer->AddStretchSpacer();
+        textCtrl = new wxTextCtrl(contentPanel,wxID_ANY,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
         textCtrl->SetHint("Qty:");
         ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
 
-        contentPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxALL, 10);
+        contentPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxRIGHT|wxLEFT, 20);
     }
 
     wxPanel* AddItemPanel = new wxPanel(MenuPanel,wxID_ANY);
@@ -161,6 +180,7 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
     AddItemPanel->SetSizer(AddItemSizer);
     wxButton* MenuButton = new wxButton(AddItemPanel,add::menuButtonId,"Main Menu");
     AddItemSizer->Add(MenuButton,0,wxALIGN_LEFT|wxALL,5);
+    AddItemSizer->AddStretchSpacer();
     wxButton* AddItemButton = new wxButton(AddItemPanel,add::AddItemId,"Add Item");
     AddItemSizer->Add(AddItemButton,0,wxALIGN_RIGHT|wxALL,5);
 
@@ -234,16 +254,18 @@ void AddObjectFrame::MenuButtonClick(wxFrame* frame){
 }
 void AddObjectFrame::AddItem(wxPanel* panel,wxBoxSizer* panelSizer,MyScrolledWindow* parentPanel,wxBoxSizer* parentSizer){
     wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
     textCtrl->SetHint("ID");
     ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
-    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+    ContentSizer->AddStretchSpacer();
+    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxSize(350,35), 0);
     textCtrl->SetHint("Name");
     ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
-    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+    ContentSizer->AddStretchSpacer();
+    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
     textCtrl->SetHint("Qty:");
     ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
-    panelSizer->Add(ContentSizer, 0, wxEXPAND | wxALL, 10);
+    panelSizer->Add(ContentSizer, 0, wxEXPAND | wxRIGHT|wxLEFT, 20);
     panelSizer->Layout();
     panelSizer->FitInside(panel);
     panel->Refresh();
