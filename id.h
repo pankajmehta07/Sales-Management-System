@@ -1,3 +1,6 @@
+#include <map>
+#include <array>
+
 namespace menu{
     int wxID_HELLO = wxID_HIGHEST+1;
     int panelId = wxID_HELLO+1;
@@ -16,4 +19,7 @@ namespace add{
     int sellButtonId = buyButtonId+1;
     int searchButtonId = sellButtonId+1;
     int AddItemId = searchButtonId+1;
+
+
+    std::map<std::string,std::array<int,4>> ProductDetails;
 }

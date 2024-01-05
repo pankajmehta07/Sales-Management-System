@@ -5,6 +5,7 @@
 #include"MenuFrame.h"
 
 
+
 class MyScrolledWindow : public wxScrolledWindow {
 public:
     MyScrolledWindow(wxWindow* parent, wxWindowID id = wxID_ANY, int scrollbarOrientation = wxBOTH)
@@ -36,6 +37,7 @@ class AddObjectFrame : public wxFrame{
     wxPanel* MenuPanel;
     wxBoxSizer* MenuPanelSizer;
     wxTextCtrl* textCtrl;
+    int count=1;
 
     // Menu Click 
         void OnQuit(wxCommandEvent& event);
@@ -70,7 +72,7 @@ wxEND_EVENT_TABLE();
 
 AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wxSize& size):wxFrame(NULL,wxID_ANY,title,pos,size){
     // SetIcon(wxIcon(wxT("photo.ico")));
-    SetMinSize(wxSize(600,540));
+    SetMinSize(wxSize(750,540));
     
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(add::wxID_HELLO, "&Hello...\tCtrl-H", "Help string shown in status bar for this menu item");
@@ -101,9 +103,8 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
     SellerPanel->SetSizer(SellerPanelSizer);
 
 
-    SellerPanelSizer->Add(0,20);
     wxStaticText* SellerName = new wxStaticText(SellerPanel,wxID_ANY,wxT("Seller Name"));
-    wxFont font1(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+    wxFont font1(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
     SellerName->SetFont(font1);
     SellerPanelSizer->Add(SellerName,1,wxALIGN_CENTER|wxALL,0);
     wxStaticText* SellerAddress1 = new wxStaticText(SellerPanel,wxID_ANY,wxT("Thapathali, Kathmandu-11, Kathmandu"));
@@ -117,8 +118,6 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
     wxFont font3(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL);
     SellerPhoneNumber->SetFont(font3);
     SellerPanelSizer->Add(SellerPhoneNumber,1,wxALIGN_CENTER|wxALL,0);
-
-    SellerPanelSizer->Add(0,8);
 
     wxStaticLine* separatorLine = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
     wxColour separatorColour(150,150,150);
@@ -140,15 +139,19 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
 
     wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
     ContentSizer->Add(20,0);
-    wxStaticText* text= new wxStaticText(contentPanel,wxID_ANY,wxT("  ID  "));
+    wxStaticText* text= new wxStaticText(contentPanel,wxID_ANY,wxT("ID"), wxDefaultPosition, wxSize(100, 35), wxALIGN_CENTER);
     text->SetFont(font2);
     ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
-    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Product Name"));
+    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Product Name"), wxDefaultPosition, wxSize(350, 35), wxALIGN_CENTER);
     text->SetFont(font2);
     ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
-    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Quantity  "));
+    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Rate"), wxDefaultPosition, wxSize(100, 35), wxALIGN_CENTER);
+    text->SetFont(font2);
+    ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->AddStretchSpacer();
+    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Quantity"), wxDefaultPosition, wxSize(100, 35), wxALIGN_CENTER);
     text->SetFont(font2);
     ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->Add(20,0);    
@@ -158,31 +161,37 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
     
      for (int i = 0; i < 2; ++i)
     {
+        add::ProductDetails["Product"+std::to_string(count)]={wxID_HIGHEST+1,wxID_HIGHEST+2,wxID_HIGHEST+3,wxID_HIGHEST+4};
         wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-        textCtrl = new wxTextCtrl(contentPanel,wxID_ANY,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
+        textCtrl = new wxTextCtrl(contentPanel,add::ProductDetails["Product"+std::to_string(count)][0],wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
         textCtrl->SetHint("ID");
         ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
-        textCtrl = new wxTextCtrl(contentPanel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxSize(350,35), 0);
+        textCtrl = new wxTextCtrl(contentPanel,add::ProductDetails["Product"+std::to_string(count)][1],wxEmptyString, wxDefaultPosition, wxSize(350,35), 0);
         textCtrl->SetHint("Name");
         ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
-        textCtrl = new wxTextCtrl(contentPanel,wxID_ANY,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
+        textCtrl = new wxTextCtrl(contentPanel,add::ProductDetails["Product"+std::to_string(count)][2],wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
+        textCtrl->SetHint("Rate");
+        ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+        ContentSizer->AddStretchSpacer();
+        textCtrl = new wxTextCtrl(contentPanel,add::ProductDetails["Product"+std::to_string(count)][3],wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
         textCtrl->SetHint("Qty:");
         ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
 
         contentPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxRIGHT|wxLEFT, 20);
+        count++;
     }
 
     wxPanel* AddItemPanel = new wxPanel(MenuPanel,wxID_ANY);
-    MenuPanelSizer->Add(AddItemPanel,0,wxALIGN_CENTER|wxEXPAND|wxALL);
+    MenuPanelSizer->Add(AddItemPanel,0,wxALIGN_CENTER|wxEXPAND|wxALL,10);
     wxBoxSizer* AddItemSizer=new wxBoxSizer(wxHORIZONTAL);
     AddItemPanel->SetSizer(AddItemSizer);
     wxButton* MenuButton = new wxButton(AddItemPanel,add::menuButtonId,"Main Menu");
-    AddItemSizer->Add(MenuButton,0,wxALIGN_LEFT|wxALL,5);
+    AddItemSizer->Add(MenuButton,0,wxALIGN_LEFT|wxLEFT,20);
     AddItemSizer->AddStretchSpacer();
     wxButton* AddItemButton = new wxButton(AddItemPanel,add::AddItemId,"Add Item");
-    AddItemSizer->Add(AddItemButton,0,wxALIGN_RIGHT|wxALL,5);
+    AddItemSizer->Add(AddItemButton,0,wxALIGN_RIGHT|wxRIGHT,20);
 
     AddItemButton->Bind(wxEVT_BUTTON, [this, contentPanel,contentPanelSizer,MenuPanel,MenuPanelSizer](wxCommandEvent& event) {
             AddItem(contentPanel,contentPanelSizer,MenuPanel,MenuPanelSizer);
@@ -253,16 +262,21 @@ void AddObjectFrame::MenuButtonClick(wxFrame* frame){
     frame->Close(true);
 }
 void AddObjectFrame::AddItem(wxPanel* panel,wxBoxSizer* panelSizer,MyScrolledWindow* parentPanel,wxBoxSizer* parentSizer){
+    add::ProductDetails["Product"+std::to_string(count)]={wxID_HIGHEST+1,wxID_HIGHEST+2,wxID_HIGHEST+3,wxID_HIGHEST+4};
     wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
+    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][0],wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
     textCtrl->SetHint("ID");
     ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
     ContentSizer->AddStretchSpacer();
-    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxSize(350,35), 0);
+    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][1],wxEmptyString, wxDefaultPosition, wxSize(350,35), 0);
     textCtrl->SetHint("Name");
     ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
     ContentSizer->AddStretchSpacer();
-    textCtrl = new wxTextCtrl(panel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
+    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][2],wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
+    textCtrl->SetHint("Rate:");
+    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
+    ContentSizer->AddStretchSpacer();
+    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][3],wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
     textCtrl->SetHint("Qty:");
     ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
     panelSizer->Add(ContentSizer, 0, wxEXPAND | wxRIGHT|wxLEFT, 20);
@@ -272,6 +286,7 @@ void AddObjectFrame::AddItem(wxPanel* panel,wxBoxSizer* panelSizer,MyScrolledWin
     parentSizer->Layout();
     parentSizer->FitInside(parentPanel);
     parentPanel->Refresh();
+    count++;
 }
 void AddObjectFrame::SellButtonClick(wxCommandEvent& event){
     wxMessageBox(_("Sell Button Clicked"));
