@@ -1,7 +1,11 @@
 #include<wx/wx.h>
 #include<wx/textctrl.h>
 #include <wx/statline.h>
+#include <vector>
+#include <map>
+#include <array>
 #include"id.h"
+#include"BuySellFunctions.h"
 #include"MenuFrame.h"
 #include"AddObjectFrame.h"
 #include"SellObjectFrame.h"

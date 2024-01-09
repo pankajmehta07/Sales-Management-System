@@ -5,7 +5,6 @@
 #include"MenuFrame.h"
 
 
-
 class MyScrolledWindow : public wxScrolledWindow {
 public:
     MyScrolledWindow(wxWindow* parent, wxWindowID id = wxID_ANY, int scrollbarOrientation = wxBOTH)
@@ -38,6 +37,7 @@ class AddObjectFrame : public wxFrame{
     wxBoxSizer* MenuPanelSizer;
     wxTextCtrl* textCtrl;
     int count=1;
+    wxArrayString choices = getNameChoices();
 
     // Menu Click 
         void OnQuit(wxCommandEvent& event);
@@ -50,6 +50,8 @@ class AddObjectFrame : public wxFrame{
         void BuyButtonClick(wxCommandEvent& event);
         void SellButtonClick(wxCommandEvent& event);
         void SearchButtonClick(wxCommandEvent& event);
+        void OnTextEntered(wxCommandEvent&,wxComboBox*);
+        void OnCharEntered(wxKeyEvent& event,wxComboBox*);
         void MenuButtonClick(wxFrame*);
         wxDECLARE_EVENT_TABLE();
 };
@@ -158,7 +160,6 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
 
     contentPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxALL, 10);
 
-    
      for (int i = 0; i < 2; ++i)
     {
         add::ProductDetails["Product"+std::to_string(count)]={wxID_HIGHEST+1,wxID_HIGHEST+2,wxID_HIGHEST+3,wxID_HIGHEST+4};
@@ -167,9 +168,20 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
         textCtrl->SetHint("ID");
         ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
-        textCtrl = new wxTextCtrl(contentPanel,add::ProductDetails["Product"+std::to_string(count)][1],wxEmptyString, wxDefaultPosition, wxSize(350,35), 0);
-        textCtrl->SetHint("Name");
-        ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+
+        int id=add::ProductDetails["Product"+std::to_string(count)][1];
+        // Create a combo box for the dropdown list
+        wxComboBox* comboBox = new wxComboBox(contentPanel, id, wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN);
+
+        comboBox->Bind(wxEVT_TEXT, [this, comboBox](wxCommandEvent& event) {
+            OnTextEntered(event,comboBox);
+        });
+        comboBox->Bind(wxEVT_CHAR, [this, comboBox](wxKeyEvent& event) {
+            OnCharEntered(event,comboBox);
+        });
+        // End of Menu Section.
+        comboBox->SetHint("Name");
+        ContentSizer->Add(comboBox,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
         textCtrl = new wxTextCtrl(contentPanel,add::ProductDetails["Product"+std::to_string(count)][2],wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
         textCtrl->SetHint("Rate");
@@ -179,9 +191,12 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
         textCtrl->SetHint("Qty:");
         ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
 
+        
+
         contentPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxRIGHT|wxLEFT, 20);
         count++;
     }
+
 
     wxPanel* AddItemPanel = new wxPanel(MenuPanel,wxID_ANY);
     MenuPanelSizer->Add(AddItemPanel,0,wxALIGN_CENTER|wxEXPAND|wxALL,10);
@@ -262,23 +277,34 @@ void AddObjectFrame::MenuButtonClick(wxFrame* frame){
     frame->Close(true);
 }
 void AddObjectFrame::AddItem(wxPanel* panel,wxBoxSizer* panelSizer,MyScrolledWindow* parentPanel,wxBoxSizer* parentSizer){
+    
     add::ProductDetails["Product"+std::to_string(count)]={wxID_HIGHEST+1,wxID_HIGHEST+2,wxID_HIGHEST+3,wxID_HIGHEST+4};
     wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][0],wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
+    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][0],wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
     textCtrl->SetHint("ID");
-    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
+    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
-    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][1],wxEmptyString, wxDefaultPosition, wxSize(350,35), 0);
-    textCtrl->SetHint("Name");
-    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
+
+    int id=add::ProductDetails["Product"+std::to_string(count)][1];
+    wxComboBox* comboBox = new wxComboBox(panel, id, wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN);
+
+    comboBox->Bind(wxEVT_TEXT, [this, comboBox](wxCommandEvent& event) {
+        OnTextEntered(event,comboBox);
+    });
+    comboBox->Bind(wxEVT_CHAR, [this, comboBox](wxKeyEvent& event) {
+        OnCharEntered(event,comboBox);
+    });
+    comboBox->SetHint("Name");
+    ContentSizer->Add(comboBox,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
     textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][2],wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
-    textCtrl->SetHint("Rate:");
-    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
+    textCtrl->SetHint("Rate");
+    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
-    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][3],wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
+    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][3],wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
     textCtrl->SetHint("Qty:");
-    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxALL,5);
+    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+
     panelSizer->Add(ContentSizer, 0, wxEXPAND | wxRIGHT|wxLEFT, 20);
     panelSizer->Layout();
     panelSizer->FitInside(panel);
@@ -296,6 +322,40 @@ void AddObjectFrame::BuyButtonClick(wxCommandEvent& event){
 }
 
 
+
+void AddObjectFrame::OnTextEntered(wxCommandEvent& event,wxComboBox* autoCompleteComboBox)
+{
+    wxString enteredText = autoCompleteComboBox->GetValue();
+
+    // Filter suggestions based on the entered text
+    wxArrayString filteredSuggestions;
+
+    for (size_t i = 0; i < choices.GetCount(); ++i)
+        {
+            wxString choice = choices[i];
+            if (choice.Lower().Contains(enteredText.Lower()))
+            {
+                filteredSuggestions.Add(choice);
+            }
+        }
+
+    // Update the suggestions in the combo box
+    autoCompleteComboBox->Set(filteredSuggestions);
+    // autoCompleteComboBox->Popup();
+    event.Skip();
+
+}
+
+void AddObjectFrame::OnCharEntered(wxKeyEvent& event,wxComboBox* combo)
+{
+    // Allow continuous writing in the combobox
+    wxCommandEvent textEvent(wxEVT_TEXT, combo->GetId());
+
+    wxPostEvent(combo, textEvent);
+
+    // Skip the event to allow the default handling (character entry)
+    event.Skip();
+}
 
 
 #endif

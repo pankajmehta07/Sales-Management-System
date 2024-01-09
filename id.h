@@ -1,6 +1,3 @@
-#include <map>
-#include <array>
-
 namespace menu{
     int wxID_HELLO = wxID_HIGHEST+1;
     int panelId = wxID_HELLO+1;
