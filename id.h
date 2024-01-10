@@ -18,5 +18,4 @@ namespace add{
     int AddItemId = searchButtonId+1;
 
 
-    std::map<std::string,std::array<int,4>> ProductDetails;
 }

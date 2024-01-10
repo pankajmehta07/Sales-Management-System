@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <array>
+#include <tuple>
 #include"id.h"
 #include"BuySellFunctions.h"
 #include"MenuFrame.h"

@@ -36,8 +36,13 @@ class AddObjectFrame : public wxFrame{
     wxPanel* MenuPanel;
     wxBoxSizer* MenuPanelSizer;
     wxTextCtrl* textCtrl;
+    // wxTextCtrl* IDTextCtrl;
+    // wxTextCtrl* RateTextCtrl;
+    // wxTextCtrl* QuantityTextCtrl;
     int count=1;
     wxArrayString choices = getNameChoices();
+    int ids = wxID_HIGHEST+1;
+
 
     // Menu Click 
         void OnQuit(wxCommandEvent& event);
@@ -50,9 +55,10 @@ class AddObjectFrame : public wxFrame{
         void BuyButtonClick(wxCommandEvent& event);
         void SellButtonClick(wxCommandEvent& event);
         void SearchButtonClick(wxCommandEvent& event);
-        void OnTextEntered(wxCommandEvent&,wxComboBox*);
+        void OnTextEntered(wxCommandEvent&,wxComboBox*,wxTextCtrl*,wxTextCtrl*,wxTextCtrl*);
         void OnCharEntered(wxKeyEvent& event,wxComboBox*);
         void MenuButtonClick(wxFrame*);
+        void OnNameEntered(wxCommandEvent& event,wxComboBox*,wxTextCtrl*,wxTextCtrl*,wxTextCtrl*);
         wxDECLARE_EVENT_TABLE();
 };
 
@@ -162,20 +168,16 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
 
      for (int i = 0; i < 2; ++i)
     {
-        add::ProductDetails["Product"+std::to_string(count)]={wxID_HIGHEST+1,wxID_HIGHEST+2,wxID_HIGHEST+3,wxID_HIGHEST+4};
         wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-        textCtrl = new wxTextCtrl(contentPanel,add::ProductDetails["Product"+std::to_string(count)][0],wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
-        textCtrl->SetHint("ID");
-        ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+        wxTextCtrl* IDTextCtrl = new wxTextCtrl(contentPanel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
+        IDTextCtrl->SetHint("ID");
+        ContentSizer->Add(IDTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
+        ids++;
 
-        int id=add::ProductDetails["Product"+std::to_string(count)][1];
         // Create a combo box for the dropdown list
-        wxComboBox* comboBox = new wxComboBox(contentPanel, id, wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN);
-
-        comboBox->Bind(wxEVT_TEXT, [this, comboBox](wxCommandEvent& event) {
-            OnTextEntered(event,comboBox);
-        });
+        wxComboBox* comboBox = new wxComboBox(contentPanel, ids, wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN);
+        
         comboBox->Bind(wxEVT_CHAR, [this, comboBox](wxKeyEvent& event) {
             OnCharEntered(event,comboBox);
         });
@@ -183,13 +185,25 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
         comboBox->SetHint("Name");
         ContentSizer->Add(comboBox,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
-        textCtrl = new wxTextCtrl(contentPanel,add::ProductDetails["Product"+std::to_string(count)][2],wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
-        textCtrl->SetHint("Rate");
-        ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+        ids++;
+        wxTextCtrl* RateTextCtrl = new wxTextCtrl(contentPanel,ids,wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
+        RateTextCtrl->SetHint("Rate");
+        ContentSizer->Add(RateTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
-        textCtrl = new wxTextCtrl(contentPanel,add::ProductDetails["Product"+std::to_string(count)][3],wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
-        textCtrl->SetHint("Qty:");
-        ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+        ids++;
+        wxTextCtrl* QuantityTextCtrl = new wxTextCtrl(contentPanel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
+        QuantityTextCtrl->SetHint("Qty:");
+        ContentSizer->Add(QuantityTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+        ids++;
+
+
+        comboBox->Bind(wxEVT_TEXT, [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
+        OnTextEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
+        });
+
+        // comboBox->Bind(wxEVT_TEXT_ENTER , [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
+        //     OnNameEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
+        // });
 
         
 
@@ -278,32 +292,45 @@ void AddObjectFrame::MenuButtonClick(wxFrame* frame){
 }
 void AddObjectFrame::AddItem(wxPanel* panel,wxBoxSizer* panelSizer,MyScrolledWindow* parentPanel,wxBoxSizer* parentSizer){
     
-    add::ProductDetails["Product"+std::to_string(count)]={wxID_HIGHEST+1,wxID_HIGHEST+2,wxID_HIGHEST+3,wxID_HIGHEST+4};
     wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][0],wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
-    textCtrl->SetHint("ID");
-    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    wxTextCtrl* IDTextCtrl = new wxTextCtrl(panel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
+    IDTextCtrl->SetHint("ID");
+    ContentSizer->Add(IDTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
+    ids++;
 
-    int id=add::ProductDetails["Product"+std::to_string(count)][1];
-    wxComboBox* comboBox = new wxComboBox(panel, id, wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN);
+    wxComboBox* comboBox = new wxComboBox(panel, ids, wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN );
 
-    comboBox->Bind(wxEVT_TEXT, [this, comboBox](wxCommandEvent& event) {
-        OnTextEntered(event,comboBox);
-    });
+    
     comboBox->Bind(wxEVT_CHAR, [this, comboBox](wxKeyEvent& event) {
         OnCharEntered(event,comboBox);
     });
+    int id = ids;
     comboBox->SetHint("Name");
     ContentSizer->Add(comboBox,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
-    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][2],wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
-    textCtrl->SetHint("Rate");
-    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ids++;
+    wxTextCtrl* RateTextCtrl = new wxTextCtrl(panel,ids,wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
+    RateTextCtrl->SetHint("Rate");
+    ContentSizer->Add(RateTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
-    textCtrl = new wxTextCtrl(panel,add::ProductDetails["Product"+std::to_string(count)][3],wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
-    textCtrl->SetHint("Qty:");
-    ContentSizer->Add(textCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ids++;
+    wxTextCtrl* QuantityTextCtrl = new wxTextCtrl(panel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
+    QuantityTextCtrl->SetHint("Qty:");
+    ContentSizer->Add(QuantityTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ids++;
+
+    comboBox->Bind(wxEVT_TEXT, [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
+        OnTextEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
+    });
+
+
+    // comboBox->Bind(wxEVT_TEXT_ENTER, [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
+    //         OnNameEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
+    //     });
+    // comboBox->Bind(wxEVT_KILL_FOCUS, [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
+    //         OnNameEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
+    //     });
 
     panelSizer->Add(ContentSizer, 0, wxEXPAND | wxRIGHT|wxLEFT, 20);
     panelSizer->Layout();
@@ -323,25 +350,41 @@ void AddObjectFrame::BuyButtonClick(wxCommandEvent& event){
 
 
 
-void AddObjectFrame::OnTextEntered(wxCommandEvent& event,wxComboBox* autoCompleteComboBox)
+void AddObjectFrame::OnTextEntered(wxCommandEvent& event,wxComboBox* autoCompleteComboBox,wxTextCtrl* ID,wxTextCtrl* Rate,wxTextCtrl* Quantity)
 {
     wxString enteredText = autoCompleteComboBox->GetValue();
 
     // Filter suggestions based on the entered text
     wxArrayString filteredSuggestions;
 
-    for (size_t i = 0; i < choices.GetCount(); ++i)
-        {
-            wxString choice = choices[i];
-            if (choice.Lower().Contains(enteredText.Lower()))
-            {
-                filteredSuggestions.Add(choice);
-            }
-        }
+    for (size_t i = 0; i < choices.GetCount(); i++)
+    {
+        wxString choice = choices[i];
+        if (choice.Lower()==enteredText.Lower())
+        {   
 
+            filteredSuggestions.Add(choice);
+            autoCompleteComboBox->Set(filteredSuggestions);
+            
+            std::tuple<int, int> productDetails = getProductDetailsOnNameGiven(enteredText.Lower().ToStdString());
+            ID->SetValue(wxString::Format("%d", std::get<0>(productDetails)));
+            Rate->SetValue(wxString::Format("%d", std::get<1>(productDetails)));
+            Quantity->SetValue(wxT("1"));
+            event.Skip();
+            return;
+        }
+        else if (choice.Lower().Contains(enteredText.Lower()))
+        {
+            filteredSuggestions.Add(choice);
+        }
+    }
+    ID->SetValue(wxString::Format("%d", 0));
+    Rate->SetValue(wxString::Format("%d", 0));
+    Quantity->SetValue(wxT("0"));
     // Update the suggestions in the combo box
-    autoCompleteComboBox->Set(filteredSuggestions);
     // autoCompleteComboBox->Popup();
+    autoCompleteComboBox->Set(filteredSuggestions);
+    
     event.Skip();
 
 }
@@ -357,5 +400,38 @@ void AddObjectFrame::OnCharEntered(wxKeyEvent& event,wxComboBox* combo)
     event.Skip();
 }
 
+
+void AddObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,wxTextCtrl* ID,wxTextCtrl* Rate,wxTextCtrl* Quantity){
+    wxString enteredText = comboBox->GetValue();
+    wxArrayString filteredSuggestions;
+    for (size_t i = 0; i < choices.GetCount(); i++){
+        wxString choice = choices[i];
+        if (choice.Lower()==enteredText.Lower())
+        {   
+
+            filteredSuggestions.Add(choice);
+            comboBox->Set(filteredSuggestions);
+            
+            std::tuple<int, int> productDetails = getProductDetailsOnNameGiven(enteredText.ToStdString());
+            ID->SetValue(wxString::Format("%d", std::get<0>(productDetails)));
+            Rate->SetValue(wxString::Format("%d", std::get<1>(productDetails)));
+            Quantity->SetValue(wxT("1"));
+            event.Skip();
+            return;
+        }
+        else if (choice.Lower().Contains(enteredText.Lower()))
+        {
+            filteredSuggestions.Add(choice);
+            
+        }
+    }
+    ID->SetValue(wxString::Format("%d", 0));
+    Rate->SetValue(wxString::Format("%d", 0));
+    Quantity->SetValue(wxT("0"));
+    comboBox->Set(filteredSuggestions);
+
+    event.Skip();
+    
+}
 
 #endif
