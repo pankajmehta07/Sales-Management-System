@@ -140,6 +140,17 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
     wxBoxSizer* MenuPanelSizer = new wxBoxSizer(wxVERTICAL);
     MenuPanel->SetSizer(MenuPanelSizer);
 
+    wxPanel* TopicPanel = new wxPanel(MenuPanel,wxID_ANY);
+    MenuPanelSizer->Add(TopicPanel,0,wxALIGN_CENTER|wxEXPAND);
+    wxBoxSizer* TopicPanelSizer = new wxBoxSizer(wxVERTICAL);
+    TopicPanel->SetSizer(TopicPanelSizer);
+    TopicPanelSizer->Add(0,20);
+    wxStaticText* topic = new wxStaticText(TopicPanel,wxID_ANY,wxT("Add Items"));
+    wxFont topicFont(16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL);
+    topic->SetFont(topicFont);
+    TopicPanelSizer->Add(topic,1,wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL,5);
+    TopicPanelSizer->Add(0,20);
+
     wxPanel* contentPanel = new wxPanel(MenuPanel,wxID_ANY);
     MenuPanelSizer->Add(contentPanel,1,wxALIGN_CENTER|wxEXPAND);
     wxBoxSizer* contentPanelSizer = new wxBoxSizer(wxVERTICAL);
@@ -147,24 +158,24 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
 
     wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
     ContentSizer->Add(20,0);
-    wxStaticText* text= new wxStaticText(contentPanel,wxID_ANY,wxT("ID"), wxDefaultPosition, wxSize(100, 35), wxALIGN_CENTER);
+    wxStaticText* text= new wxStaticText(contentPanel,wxID_ANY,wxT("ID"), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
     text->SetFont(font2);
     ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
-    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Product Name"), wxDefaultPosition, wxSize(350, 35), wxALIGN_CENTER);
+    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Product Name"), wxDefaultPosition, wxSize(350, 18), wxALIGN_CENTER);
     text->SetFont(font2);
     ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
-    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Rate"), wxDefaultPosition, wxSize(100, 35), wxALIGN_CENTER);
+    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Rate"), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
     text->SetFont(font2);
     ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
-    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Quantity"), wxDefaultPosition, wxSize(100, 35), wxALIGN_CENTER);
+    text = new wxStaticText(contentPanel,wxID_ANY,wxT("Quantity"), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
     text->SetFont(font2);
     ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
     ContentSizer->Add(20,0);    
 
-    contentPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxALL, 10);
+    contentPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxALL,5);
 
      for (int i = 0; i < 2; ++i)
     {
@@ -200,12 +211,7 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
         comboBox->Bind(wxEVT_TEXT, [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
         OnTextEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
         });
-
-        // comboBox->Bind(wxEVT_TEXT_ENTER , [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
-        //     OnNameEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
-        // });
-
-        
+       
 
         contentPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxRIGHT|wxLEFT, 20);
         count++;
