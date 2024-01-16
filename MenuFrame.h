@@ -68,7 +68,7 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     wxBoxSizer* MainSizer = new wxBoxSizer(wxVERTICAL);
 
     wxPanel* SellerPanel = new wxPanel(this,wxID_ANY);
-    MainSizer->Add(SellerPanel,0,wxALIGN_CENTER|wxEXPAND|wxALL);
+    MainSizer->Add(SellerPanel,0,wxEXPAND|wxALL);
 
     wxBoxSizer* SellerPanelSizer=new wxBoxSizer(wxVERTICAL);
     SellerPanel->SetSizer(SellerPanelSizer);
@@ -100,7 +100,7 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     
     wxPanel* MenuPanel = new wxPanel(this,wxID_ANY);
     // MenuPanel->SetBackgroundColour(wxColour(200,200,100));
-    MainSizer->Add(MenuPanel,1,wxALIGN_CENTER|wxEXPAND);
+    MainSizer->Add(MenuPanel,1,wxEXPAND);
     wxBoxSizer* MenuPanelSizer = new wxBoxSizer(wxVERTICAL);
     MenuPanel->SetSizer(MenuPanelSizer);
 

@@ -12,7 +12,6 @@ public:
     {
         // Set up the scrollbar
         SetScrollbar(scrollbarOrientation, 0, 10, 100);
-        // SetScrollbar(wxVERTICAL, 0, 10, 100);
         SetScrollRate(5, 5);
     }
 
@@ -36,9 +35,6 @@ class AddObjectFrame : public wxFrame{
     wxPanel* MenuPanel;
     wxBoxSizer* MenuPanelSizer;
     wxTextCtrl* textCtrl;
-    // wxTextCtrl* IDTextCtrl;
-    // wxTextCtrl* RateTextCtrl;
-    // wxTextCtrl* QuantityTextCtrl;
     int count=1;
     wxArrayString choices = getNameChoices();
     int ids = wxID_HIGHEST+1;
@@ -55,10 +51,9 @@ class AddObjectFrame : public wxFrame{
         void BuyButtonClick(wxCommandEvent& event);
         void SellButtonClick(wxCommandEvent& event);
         void SearchButtonClick(wxCommandEvent& event);
-        void OnTextEntered(wxCommandEvent&,wxComboBox*,wxTextCtrl*,wxTextCtrl*,wxTextCtrl*);
-        void OnCharEntered(wxKeyEvent& event,wxComboBox*);
         void MenuButtonClick(wxFrame*);
         void OnNameEntered(wxCommandEvent& event,wxComboBox*,wxTextCtrl*,wxTextCtrl*,wxTextCtrl*);
+        void OnIDEntered(wxCommandEvent& event,wxTextCtrl*);
         wxDECLARE_EVENT_TABLE();
 };
 
@@ -105,7 +100,7 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
 
     wxPanel* SellerPanel = new wxPanel(this,wxID_ANY);
     // SellerPanel->SetBackgroundColour(wxColour(120,23,123));
-    MainSizer->Add(SellerPanel,0,wxALIGN_CENTER|wxEXPAND|wxALL);
+    MainSizer->Add(SellerPanel,0,wxEXPAND|wxALL);
 
     wxBoxSizer* SellerPanelSizer=new wxBoxSizer(wxVERTICAL);
     SellerPanel->SetSizer(SellerPanelSizer);
@@ -136,12 +131,12 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
     
     MyScrolledWindow* MenuPanel = new MyScrolledWindow(this,wxID_ANY);
     // MenuPanel->SetBackgroundColour(wxColour(200,200,100));
-    MainSizer->Add(MenuPanel,1,wxALIGN_CENTER|wxEXPAND);
+    MainSizer->Add(MenuPanel,1,wxEXPAND);
     wxBoxSizer* MenuPanelSizer = new wxBoxSizer(wxVERTICAL);
     MenuPanel->SetSizer(MenuPanelSizer);
 
     wxPanel* TopicPanel = new wxPanel(MenuPanel,wxID_ANY);
-    MenuPanelSizer->Add(TopicPanel,0,wxALIGN_CENTER|wxEXPAND);
+    MenuPanelSizer->Add(TopicPanel,0,wxEXPAND);
     wxBoxSizer* TopicPanelSizer = new wxBoxSizer(wxVERTICAL);
     TopicPanel->SetSizer(TopicPanelSizer);
     TopicPanelSizer->Add(0,20);
@@ -152,7 +147,7 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
     TopicPanelSizer->Add(0,20);
 
     wxPanel* contentPanel = new wxPanel(MenuPanel,wxID_ANY);
-    MenuPanelSizer->Add(contentPanel,1,wxALIGN_CENTER|wxEXPAND);
+    MenuPanelSizer->Add(contentPanel,1,wxEXPAND);
     wxBoxSizer* contentPanelSizer = new wxBoxSizer(wxVERTICAL);
     contentPanel->SetSizer(contentPanelSizer);
 
@@ -160,19 +155,19 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
     ContentSizer->Add(20,0);
     wxStaticText* text= new wxStaticText(contentPanel,wxID_ANY,wxT("ID"), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
     text->SetFont(font2);
-    ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->Add(text,0,wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
     text = new wxStaticText(contentPanel,wxID_ANY,wxT("Product Name"), wxDefaultPosition, wxSize(350, 18), wxALIGN_CENTER);
     text->SetFont(font2);
-    ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->Add(text,0,wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
     text = new wxStaticText(contentPanel,wxID_ANY,wxT("Rate"), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
     text->SetFont(font2);
-    ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->Add(text,0,wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
     text = new wxStaticText(contentPanel,wxID_ANY,wxT("Quantity"), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
     text->SetFont(font2);
-    ContentSizer->Add(text,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->Add(text,0,wxEXPAND|wxALL,5);
     ContentSizer->Add(20,0);    
 
     contentPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxALL,5);
@@ -180,36 +175,39 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
      for (int i = 0; i < 2; ++i)
     {
         wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-        wxTextCtrl* IDTextCtrl = new wxTextCtrl(contentPanel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
+        wxTextCtrl* IDTextCtrl = new wxTextCtrl(contentPanel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0,wxTextValidator(wxFILTER_DIGITS));
         IDTextCtrl->SetHint("ID");
-        ContentSizer->Add(IDTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+        ContentSizer->Add(IDTextCtrl,0,wxEXPAND|wxALL,5);
+        // IDTextCtrl->Bind(wxEVT_TEXT, [this,IDTextCtrl](wxCommandEvent& event) {
+        //     OnIDEntered(event,IDTextCtrl);
+        // });
         ContentSizer->AddStretchSpacer();
         ids++;
 
         // Create a combo box for the dropdown list
         wxComboBox* comboBox = new wxComboBox(contentPanel, ids, wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN);
         
-        comboBox->Bind(wxEVT_CHAR, [this, comboBox](wxKeyEvent& event) {
-            OnCharEntered(event,comboBox);
-        });
+        // comboBox->Bind(wxEVT_CHAR, [this, comboBox](wxKeyEvent& event) {
+        //     OnCharEntered(event,comboBox);
+        // });
         // End of Menu Section.
         comboBox->SetHint("Name");
-        ContentSizer->Add(comboBox,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+        ContentSizer->Add(comboBox,0,wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
         ids++;
-        wxTextCtrl* RateTextCtrl = new wxTextCtrl(contentPanel,ids,wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
+        wxTextCtrl* RateTextCtrl = new wxTextCtrl(contentPanel,ids,wxEmptyString, wxDefaultPosition, wxSize(100,35), 0,wxTextValidator(wxFILTER_DIGITS));
         RateTextCtrl->SetHint("Rate");
-        ContentSizer->Add(RateTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+        ContentSizer->Add(RateTextCtrl,0,wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
         ids++;
-        wxTextCtrl* QuantityTextCtrl = new wxTextCtrl(contentPanel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
+        wxTextCtrl* QuantityTextCtrl = new wxTextCtrl(contentPanel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0,wxTextValidator(wxFILTER_DIGITS));
         QuantityTextCtrl->SetHint("Qty:");
-        ContentSizer->Add(QuantityTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+        ContentSizer->Add(QuantityTextCtrl,0,wxEXPAND|wxALL,5);
         ids++;
 
 
         comboBox->Bind(wxEVT_TEXT, [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
-        OnTextEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
+        OnNameEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
         });
        
 
@@ -219,14 +217,14 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
 
 
     wxPanel* AddItemPanel = new wxPanel(MenuPanel,wxID_ANY);
-    MenuPanelSizer->Add(AddItemPanel,0,wxALIGN_CENTER|wxEXPAND|wxALL,10);
+    MenuPanelSizer->Add(AddItemPanel,0,wxEXPAND|wxALL,10);
     wxBoxSizer* AddItemSizer=new wxBoxSizer(wxHORIZONTAL);
     AddItemPanel->SetSizer(AddItemSizer);
     wxButton* MenuButton = new wxButton(AddItemPanel,add::menuButtonId,"Main Menu");
     AddItemSizer->Add(MenuButton,0,wxALIGN_LEFT|wxLEFT,20);
     AddItemSizer->AddStretchSpacer();
     wxButton* AddItemButton = new wxButton(AddItemPanel,add::AddItemId,"Add Item");
-    AddItemSizer->Add(AddItemButton,0,wxALIGN_RIGHT|wxRIGHT,20);
+    AddItemSizer->Add(AddItemButton,0,wxRIGHT,20);
 
     AddItemButton->Bind(wxEVT_BUTTON, [this, contentPanel,contentPanelSizer,MenuPanel,MenuPanelSizer](wxCommandEvent& event) {
             AddItem(contentPanel,contentPanelSizer,MenuPanel,MenuPanelSizer);
@@ -299,44 +297,40 @@ void AddObjectFrame::MenuButtonClick(wxFrame* frame){
 void AddObjectFrame::AddItem(wxPanel* panel,wxBoxSizer* panelSizer,MyScrolledWindow* parentPanel,wxBoxSizer* parentSizer){
     
     wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-    wxTextCtrl* IDTextCtrl = new wxTextCtrl(panel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
+    wxTextCtrl* IDTextCtrl = new wxTextCtrl(panel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0,wxTextValidator(wxFILTER_DIGITS));
     IDTextCtrl->SetHint("ID");
-    ContentSizer->Add(IDTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->Add(IDTextCtrl,0,wxEXPAND|wxALL,5);
+    IDTextCtrl->Bind(wxEVT_TEXT, [this,IDTextCtrl](wxCommandEvent& event) {
+            OnIDEntered(event,IDTextCtrl);
+        });
+
+
     ContentSizer->AddStretchSpacer();
     ids++;
 
     wxComboBox* comboBox = new wxComboBox(panel, ids, wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN );
 
     
-    comboBox->Bind(wxEVT_CHAR, [this, comboBox](wxKeyEvent& event) {
-        OnCharEntered(event,comboBox);
-    });
-    int id = ids;
+    // comboBox->Bind(wxEVT_CHAR, [this, comboBox](wxKeyEvent& event) {
+    //     OnCharEntered(event,comboBox);
+    // });
     comboBox->SetHint("Name");
-    ContentSizer->Add(comboBox,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->Add(comboBox,0,wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
     ids++;
-    wxTextCtrl* RateTextCtrl = new wxTextCtrl(panel,ids,wxEmptyString, wxDefaultPosition, wxSize(100,35), 0);
+    wxTextCtrl* RateTextCtrl = new wxTextCtrl(panel,ids,wxEmptyString, wxDefaultPosition, wxSize(100,35), 0,wxTextValidator(wxFILTER_DIGITS));
     RateTextCtrl->SetHint("Rate");
-    ContentSizer->Add(RateTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->Add(RateTextCtrl,0,wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
     ids++;
-    wxTextCtrl* QuantityTextCtrl = new wxTextCtrl(panel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0);
+    wxTextCtrl* QuantityTextCtrl = new wxTextCtrl(panel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0,wxTextValidator(wxFILTER_DIGITS));
     QuantityTextCtrl->SetHint("Qty:");
-    ContentSizer->Add(QuantityTextCtrl,0,wxALIGN_CENTER|wxEXPAND|wxALL,5);
+    ContentSizer->Add(QuantityTextCtrl,0,wxEXPAND|wxALL,5);
     ids++;
 
     comboBox->Bind(wxEVT_TEXT, [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
-        OnTextEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
+        OnNameEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
     });
-
-
-    // comboBox->Bind(wxEVT_TEXT_ENTER, [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
-    //         OnNameEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
-    //     });
-    // comboBox->Bind(wxEVT_KILL_FOCUS, [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
-    //         OnNameEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
-    //     });
 
     panelSizer->Add(ContentSizer, 0, wxEXPAND | wxRIGHT|wxLEFT, 20);
     panelSizer->Layout();
@@ -354,57 +348,16 @@ void AddObjectFrame::BuyButtonClick(wxCommandEvent& event){
     wxMessageBox(_("Buy Button Clicked"));
 }
 
+// void AddObjectFrame::OnCharEntered(wxKeyEvent& event,wxComboBox* combo)
+// {
+//     // Allow continuous writing in the combobox
+//     wxCommandEvent textEvent(wxEVT_TEXT, combo->GetId());
 
+//     wxPostEvent(combo, textEvent);
 
-void AddObjectFrame::OnTextEntered(wxCommandEvent& event,wxComboBox* autoCompleteComboBox,wxTextCtrl* ID,wxTextCtrl* Rate,wxTextCtrl* Quantity)
-{
-    wxString enteredText = autoCompleteComboBox->GetValue();
-
-    // Filter suggestions based on the entered text
-    wxArrayString filteredSuggestions;
-
-    for (size_t i = 0; i < choices.GetCount(); i++)
-    {
-        wxString choice = choices[i];
-        if (choice.Lower()==enteredText.Lower())
-        {   
-
-            filteredSuggestions.Add(choice);
-            autoCompleteComboBox->Set(filteredSuggestions);
-            
-            std::tuple<int, int> productDetails = getProductDetailsOnNameGiven(enteredText.Lower().ToStdString());
-            ID->SetValue(wxString::Format("%d", std::get<0>(productDetails)));
-            Rate->SetValue(wxString::Format("%d", std::get<1>(productDetails)));
-            Quantity->SetValue(wxT("1"));
-            event.Skip();
-            return;
-        }
-        else if (choice.Lower().Contains(enteredText.Lower()))
-        {
-            filteredSuggestions.Add(choice);
-        }
-    }
-    ID->SetValue(wxString::Format("%d", 0));
-    Rate->SetValue(wxString::Format("%d", 0));
-    Quantity->SetValue(wxT("0"));
-    // Update the suggestions in the combo box
-    // autoCompleteComboBox->Popup();
-    autoCompleteComboBox->Set(filteredSuggestions);
-    
-    event.Skip();
-
-}
-
-void AddObjectFrame::OnCharEntered(wxKeyEvent& event,wxComboBox* combo)
-{
-    // Allow continuous writing in the combobox
-    wxCommandEvent textEvent(wxEVT_TEXT, combo->GetId());
-
-    wxPostEvent(combo, textEvent);
-
-    // Skip the event to allow the default handling (character entry)
-    event.Skip();
-}
+//     // Skip the event to allow the default handling (character entry)
+//     event.Skip();
+// }
 
 
 void AddObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,wxTextCtrl* ID,wxTextCtrl* Rate,wxTextCtrl* Quantity){
@@ -416,9 +369,19 @@ void AddObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,wx
         {   
 
             filteredSuggestions.Add(choice);
-            comboBox->Set(filteredSuggestions);
+            // comboBox->Clear();
+            if(comboBox->IsListEmpty()){
+                comboBox->Insert(filteredSuggestions,0);
+            }
+            else{
+                wxArrayString lists = comboBox->GetStrings();
+                for (size_t i = 0; i < lists.GetCount(); i++){
+                    comboBox->Delete(0);
+                }
+            }
+            comboBox->Append(filteredSuggestions);;
             
-            std::tuple<int, int> productDetails = getProductDetailsOnNameGiven(enteredText.ToStdString());
+            std::tuple<int, int> productDetails = getProductDetailsOnNameGiven(enteredText.Lower().ToStdString());
             ID->SetValue(wxString::Format("%d", std::get<0>(productDetails)));
             Rate->SetValue(wxString::Format("%d", std::get<1>(productDetails)));
             Quantity->SetValue(wxT("1"));
@@ -434,10 +397,34 @@ void AddObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,wx
     ID->SetValue(wxString::Format("%d", 0));
     Rate->SetValue(wxString::Format("%d", 0));
     Quantity->SetValue(wxT("0"));
-    comboBox->Set(filteredSuggestions);
+    // comboBox->Clear();
+    if(comboBox->IsListEmpty()){
+        comboBox->Append(filteredSuggestions);
+    }
+    else{
+        wxArrayString lists = comboBox->GetStrings();
+        for (size_t i = 0; i < lists.GetCount(); i++){
+            comboBox->Delete(0);
+        }
+    }
+    comboBox->Append(filteredSuggestions);
+    // comboBox->Set(filteredSuggestions);  // If this runs then no need to add the clear statement and all the above deleting loops and if conditions. Try this in windows.
 
     event.Skip();
     
 }
+
+void AddObjectFrame::OnIDEntered(wxCommandEvent& event,wxTextCtrl* ID){
+    wxString enteredText = ID->GetValue();
+    if(enteredText.length()>6){
+        // wxMessageBox(_("Greater than 6"));
+        ID->SetValue(enteredText.substr(0, 6));
+    }
+    ID->SetInsertionPointEnd();
+    event.Skip();
+
+}
+
+
 
 #endif

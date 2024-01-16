@@ -16,8 +16,8 @@ std::tuple<int, int> getProductDetailsOnNameGiven(const std::string& name) {
     */
 
 
-    int id = 4200;
-    int rate = 100;
+    int id = 400;
+    int rate = 400;
     if(name=="option 1"){
         rate = 100;    
         id = 4100;
