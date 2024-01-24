@@ -416,9 +416,9 @@ void AddObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,wx
 
 void AddObjectFrame::OnIDEntered(wxCommandEvent& event,wxTextCtrl* ID){
     wxString enteredText = ID->GetValue();
-    if(enteredText.length()>6){
+    if(enteredText.length()>5){
         // wxMessageBox(_("Greater than 6"));
-        ID->SetValue(enteredText.substr(0, 6));
+        ID->SetValue(enteredText.substr(0, 5));
     }
     ID->SetInsertionPointEnd();
     event.Skip();
