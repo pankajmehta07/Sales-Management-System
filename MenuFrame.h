@@ -1,5 +1,29 @@
 #ifndef MENU_FRAME_H
 #define MENU_FRAME_H
+#include <wx/artprov.h>
+#include <wx/bitmap.h>
+
+class MyScrolledWindow : public wxScrolledWindow {
+public:
+    MyScrolledWindow(wxWindow* parent, wxWindowID id = wxID_ANY, int scrollbarOrientation = wxBOTH)
+        : wxScrolledWindow(parent, id)
+    {
+        // Set up the scrollbar
+        SetScrollbar(scrollbarOrientation, 0, 10, 100);
+        SetScrollRate(5, 5);
+    }
+
+private:
+    // Event handlers, if needed
+
+    wxDECLARE_EVENT_TABLE();
+};
+wxBEGIN_EVENT_TABLE(MyScrolledWindow, wxScrolledWindow)
+    // Event handling, if needed
+wxEND_EVENT_TABLE()
+
+
+
 
 class MenuFrame : public wxFrame{
     public:
@@ -16,10 +40,10 @@ class MenuFrame : public wxFrame{
         void onClose(wxCloseEvent& event);
         // Buttons Click 
         void ModifyButtonClick(wxCommandEvent& event);
-        void BuyButtonClick(wxCommandEvent& event);
-        void SellButtonClick(wxCommandEvent& event);
+        void BuyButtonClick(wxCommandEvent& event,wxFrame*);
+        void SellButtonClick(wxCommandEvent& event,wxFrame*);
         void SearchButtonClick(wxCommandEvent& event);
-        void AddButtonClick(wxFrame*);
+        // void AddButtonClick(wxFrame*);
         wxDECLARE_EVENT_TABLE();
 };
 
@@ -27,6 +51,12 @@ class MenuFrame : public wxFrame{
 
 #include "AddObjectFrame.h"
 class AddObjectFrame;
+
+#include "BuyObjectFrame.h"
+class BuyObjectFrame;
+
+#include "SellObjectFrame.h"
+class SellObjectFrame;
 
 
 wxBEGIN_EVENT_TABLE(MenuFrame, wxFrame)
@@ -36,8 +66,8 @@ wxBEGIN_EVENT_TABLE(MenuFrame, wxFrame)
     EVT_CLOSE(MenuFrame::onClose)
 
     EVT_BUTTON(menu::modifyButtonId,MenuFrame::ModifyButtonClick)
-    EVT_BUTTON(menu::buyButtonId,MenuFrame::BuyButtonClick)
-    EVT_BUTTON(menu::sellButtonId,MenuFrame::SellButtonClick)
+    // EVT_BUTTON(menu::buyButtonId,MenuFrame::BuyButtonClick)
+    // EVT_BUTTON(menu::sellButtonId,MenuFrame::SellButtonClick)
     EVT_BUTTON(menu::searchButtonId,MenuFrame::SearchButtonClick)
 wxEND_EVENT_TABLE();
 
@@ -49,7 +79,13 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     SetMinSize(wxSize(750,540));
     
     wxMenu *menuFile = new wxMenu;
-    menuFile->Append(menu::wxID_HELLO, "&Hello...\tCtrl-H", "Help string shown in status bar for this menu item");
+    wxBitmap searchIcon = wxArtProvider::GetBitmap(wxART_FIND, wxART_MENU);
+    wxMenuItem* searchMenuItem = new wxMenuItem(menuFile, wxID_ANY, "Search");
+    searchMenuItem->SetBitmap(searchIcon);
+    wxAcceleratorEntry accel(wxACCEL_CTRL, 'F', wxID_ANY);
+    searchMenuItem->SetAccel(&accel);
+    Bind(wxEVT_MENU, &MenuFrame::SearchButtonClick, this, searchMenuItem->GetId());
+    menuFile->Append(searchMenuItem);
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
@@ -104,23 +140,37 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     wxBoxSizer* MenuPanelSizer = new wxBoxSizer(wxVERTICAL);
     MenuPanel->SetSizer(MenuPanelSizer);
 
-    wxButton*  BuyObjectButton= new wxButton(MenuPanel,menu::buyButtonId,"Buy ");
-    wxButton*  SellObjectButton= new wxButton(MenuPanel,menu::sellButtonId,"Sell ");
-    wxButton* AddObjectButton = new wxButton(MenuPanel,menu::addButtonId,"Add Item ");
-    wxButton* ModifyObjectButton = new wxButton(MenuPanel,menu::modifyButtonId,"Modify ");
-    wxButton* SearchObjectButton = new wxButton(MenuPanel,menu::searchButtonId,"Search ");
+    wxButton* SearchObjectButton = new wxButton(MenuPanel,menu::searchButtonId, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxBU_EXACTFIT);
+    SearchObjectButton->SetBitmap(searchIcon);
+    SearchObjectButton->SetToolTip("Search");
 
-    AddObjectButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
-            AddButtonClick(this);
+    wxButton*  BuyObjectButton= new wxButton(MenuPanel,menu::buyButtonId,"Buy Items");
+    BuyObjectButton->SetToolTip("Buy Items");
+    wxButton*  SellObjectButton= new wxButton(MenuPanel,menu::sellButtonId,"Sell Items");
+    SellObjectButton->SetToolTip("Sell Items");
+    // wxButton* AddObjectButton = new wxButton(MenuPanel,menu::addButtonId,"Add Item ");
+    wxButton* ModifyObjectButton = new wxButton(MenuPanel,menu::modifyButtonId,"Modify Inventory");
+    ModifyObjectButton->SetToolTip("Modify Inventory");
+    
+
+    // AddObjectButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
+    //         AddButtonClick(this);
+    //     });
+    BuyObjectButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
+            BuyButtonClick(event,this);
+        });
+    SellObjectButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
+            SellButtonClick(event,this);
         });
 
-    MenuPanelSizer->Add(0,40);
+    MenuPanelSizer->Add(0,20);
+    MenuPanelSizer->Add(SearchObjectButton,0,wxALIGN_RIGHT|wxRIGHT,20);
+    MenuPanelSizer->Add(0,10);
 
     MenuPanelSizer->Add(BuyObjectButton,0,wxALIGN_CENTER|wxALL,5);
     MenuPanelSizer->Add(SellObjectButton,0,wxALIGN_CENTER|wxALL,5);
-    MenuPanelSizer->Add(AddObjectButton,0,wxALIGN_CENTER|wxALL,5);
+    // MenuPanelSizer->Add(AddObjectButton,0,wxALIGN_CENTER|wxALL,5);
     MenuPanelSizer->Add(ModifyObjectButton,0,wxALIGN_CENTER|wxALL,5);
-    MenuPanelSizer->Add(SearchObjectButton,0,wxALIGN_CENTER|wxALL,5);
 
 
     Centre();
@@ -172,20 +222,27 @@ void MenuFrame::SearchButtonClick(wxCommandEvent& event){
     
     // this->Show(false);
 }
-void MenuFrame::AddButtonClick(wxFrame* frame){
-    AddObjectFrame* addFrame = new AddObjectFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
-    frame->Close(true);
-    addFrame->Show(true);
+// void MenuFrame::AddButtonClick(wxFrame* frame){
+//     AddObjectFrame* addFrame = new AddObjectFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
+//     frame->Close(true);
+//     addFrame->Show(true);
 
-}
+// }
 void MenuFrame::ModifyButtonClick(wxCommandEvent& event){
     wxMessageBox(_("Modify Button Clicked"));
+    
 }
-void MenuFrame::SellButtonClick(wxCommandEvent& event){
-    wxMessageBox(_("Sell Button Clicked"));
+void MenuFrame::SellButtonClick(wxCommandEvent& event,wxFrame* frame){
+    // wxMessageBox(_("Sell Button Clicked"));
+    SellObjectFrame* addFrame = new SellObjectFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
+    addFrame->Show(true);
+    frame->Close(true);
 }
-void MenuFrame::BuyButtonClick(wxCommandEvent& event){
-    wxMessageBox(_("Buy Button Clicked"));
+void MenuFrame::BuyButtonClick(wxCommandEvent& event,wxFrame* frame){
+    // wxMessageBox(_("Buy Button Clicked"));
+    BuyObjectFrame* addFrame = new BuyObjectFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
+    addFrame->Show(true);
+    frame->Close(true);
 }
 
 

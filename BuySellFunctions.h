@@ -121,3 +121,28 @@ std::tuple<std::string, int> getProductDetailsOnIDGiven(const int id) {
     return std::make_tuple(name, rate);
 }
 
+
+void SellDetailsVector(const std::vector<std::tuple<int, std::string, int, int>>& detailsVector) {
+    for (const auto& details : detailsVector) {
+        int IDValue = std::get<0>(details);
+        std::string nameValue = std::get<1>(details);
+        int rateValue = std::get<2>(details);
+        int qtyValue = std::get<3>(details);
+
+        // Process the details or print them
+        std::cout << "ID: " << IDValue << "\tName: " << nameValue
+                  << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
+    }
+}
+void BuyDetailsVector(const std::vector<std::tuple<int, std::string, int, int>>& detailsVector) {
+    for (const auto& details : detailsVector) {
+        int IDValue = std::get<0>(details);
+        std::string nameValue = std::get<1>(details);
+        int rateValue = std::get<2>(details);
+        int qtyValue = std::get<3>(details);
+
+        // Process the details or print them
+        std::cout << "ID: " << IDValue << "\tName: " << nameValue
+                  << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
+    }
+}

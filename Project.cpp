@@ -1,4 +1,5 @@
 #include<wx/wx.h>
+#include<wx/menu.h>
 #include<wx/textctrl.h>
 #include <wx/statline.h>
 #include <vector>

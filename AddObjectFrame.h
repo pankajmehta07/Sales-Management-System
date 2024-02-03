@@ -1,31 +1,10 @@
 #ifndef ADD_OBJECT_FRAME_H
 #define ADD_OBJECT_FRAME_H
 
+// #ifndef MENU_FRAME_H
 // class MenuFrame;
 #include"MenuFrame.h"
-
-
-class MyScrolledWindow : public wxScrolledWindow {
-public:
-    MyScrolledWindow(wxWindow* parent, wxWindowID id = wxID_ANY, int scrollbarOrientation = wxBOTH)
-        : wxScrolledWindow(parent, id)
-    {
-        // Set up the scrollbar
-        SetScrollbar(scrollbarOrientation, 0, 10, 100);
-        SetScrollRate(5, 5);
-    }
-
-private:
-    // Event handlers, if needed
-
-    wxDECLARE_EVENT_TABLE();
-};
-
-wxBEGIN_EVENT_TABLE(MyScrolledWindow, wxScrolledWindow)
-    // Event handling, if needed
-wxEND_EVENT_TABLE()
-
-
+// #endif
 
 class AddObjectFrame : public wxFrame{
     public:
@@ -178,9 +157,9 @@ AddObjectFrame::AddObjectFrame(const wxString& title,const wxPoint& pos,const wx
         wxTextCtrl* IDTextCtrl = new wxTextCtrl(contentPanel,ids,wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0,wxTextValidator(wxFILTER_DIGITS));
         IDTextCtrl->SetHint("ID");
         ContentSizer->Add(IDTextCtrl,0,wxEXPAND|wxALL,5);
-        // IDTextCtrl->Bind(wxEVT_TEXT, [this,IDTextCtrl](wxCommandEvent& event) {
-        //     OnIDEntered(event,IDTextCtrl);
-        // });
+        IDTextCtrl->Bind(wxEVT_TEXT, [this,IDTextCtrl](wxCommandEvent& event) {
+            OnIDEntered(event,IDTextCtrl);
+        });
         ContentSizer->AddStretchSpacer();
         ids++;
 
@@ -422,7 +401,6 @@ void AddObjectFrame::OnIDEntered(wxCommandEvent& event,wxTextCtrl* ID){
     }
     ID->SetInsertionPointEnd();
     event.Skip();
-
 }
 
 
