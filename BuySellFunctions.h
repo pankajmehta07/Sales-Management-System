@@ -134,6 +134,7 @@ void SellDetailsVector(const std::vector<std::tuple<int, std::string, int, int>>
                   << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
     }
 }
+
 void BuyDetailsVector(const std::vector<std::tuple<int, std::string, int, int>>& detailsVector) {
     for (const auto& details : detailsVector) {
         int IDValue = std::get<0>(details);
@@ -145,4 +146,7 @@ void BuyDetailsVector(const std::vector<std::tuple<int, std::string, int, int>>&
         std::cout << "ID: " << IDValue << "\tName: " << nameValue
                   << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
     }
+}
+void SearchDetails(std::string name) {
+    std::cout<<name<<endl;
 }

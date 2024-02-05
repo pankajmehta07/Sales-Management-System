@@ -47,7 +47,8 @@ class MenuFrame : public wxFrame{
         wxDECLARE_EVENT_TABLE();
 };
 
-
+#include "SearchObjectFrame.h"
+class SearchObjectFrame;
 
 #include "AddObjectFrame.h"
 class AddObjectFrame;
@@ -57,6 +58,7 @@ class BuyObjectFrame;
 
 #include "SellObjectFrame.h"
 class SellObjectFrame;
+
 
 
 wxBEGIN_EVENT_TABLE(MenuFrame, wxFrame)
@@ -218,28 +220,20 @@ void MenuFrame::onClose(wxCloseEvent& event){
 
 //Buttons Click:
 void MenuFrame::SearchButtonClick(wxCommandEvent& event){
-    wxMessageBox(_("Search Button Clicked "));
-    
-    // this->Show(false);
+    SearchObjectFrame* addFrame = new SearchObjectFrame(wxT("Byapar"),this->GetPosition(),wxSize(this->GetSize().GetWidth(),this->GetSize().GetHeight()));
+    addFrame->Show(true);
+    this->Close(true);
 }
-// void MenuFrame::AddButtonClick(wxFrame* frame){
-//     AddObjectFrame* addFrame = new AddObjectFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
-//     frame->Close(true);
-//     addFrame->Show(true);
-
-// }
 void MenuFrame::ModifyButtonClick(wxCommandEvent& event){
     wxMessageBox(_("Modify Button Clicked"));
     
 }
 void MenuFrame::SellButtonClick(wxCommandEvent& event,wxFrame* frame){
-    // wxMessageBox(_("Sell Button Clicked"));
     SellObjectFrame* addFrame = new SellObjectFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
     addFrame->Show(true);
     frame->Close(true);
 }
 void MenuFrame::BuyButtonClick(wxCommandEvent& event,wxFrame* frame){
-    // wxMessageBox(_("Buy Button Clicked"));
     BuyObjectFrame* addFrame = new BuyObjectFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
     addFrame->Show(true);
     frame->Close(true);

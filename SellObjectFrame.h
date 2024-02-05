@@ -25,10 +25,7 @@ class SellObjectFrame : public wxFrame{
         void OnAbout(wxCommandEvent& event);
         void onClose(wxCloseEvent& event);
         // Buttons Click 
-        void ModifyButtonClick(wxCommandEvent& event);
         void AddItem(wxPanel*,wxBoxSizer*,MyScrolledWindow*,wxBoxSizer*);
-        void BuyButtonClick(wxCommandEvent& event);
-        void SellButtonClick(wxCommandEvent& event);
         void SearchButtonClick(wxCommandEvent& event);
         void ConfirmDetails(wxCommandEvent& event);
         void MenuButtonClick(wxFrame*);
@@ -43,10 +40,6 @@ wxBEGIN_EVENT_TABLE(SellObjectFrame, wxFrame)
     EVT_MENU(add::wxID_HELLO, SellObjectFrame::OnHello)
     EVT_MENU(wxID_EXIT, SellObjectFrame::OnQuit)
     EVT_CLOSE(SellObjectFrame::onClose)
-
-    EVT_BUTTON(add::modifyButtonId,SellObjectFrame::ModifyButtonClick)
-    EVT_BUTTON(add::buyButtonId,SellObjectFrame::BuyButtonClick)
-    EVT_BUTTON(add::sellButtonId,SellObjectFrame::SellButtonClick)
     EVT_BUTTON(add::searchButtonId,SellObjectFrame::SearchButtonClick)
 wxEND_EVENT_TABLE();
 
@@ -283,14 +276,10 @@ void SellObjectFrame::onClose(wxCloseEvent& event){
 
 //Buttons Click:
 void SellObjectFrame::SearchButtonClick(wxCommandEvent& event){
-    wxMessageBox(_("Search Button Clicked "));
-    
-    // this->Show(false);
+    SearchObjectFrame* addFrame = new SearchObjectFrame(wxT("Byapar"),this->GetPosition(),wxSize(this->GetSize().GetWidth(),this->GetSize().GetHeight()));
+    addFrame->Show(true);
+    this->Close(true);
 }
-void SellObjectFrame::ModifyButtonClick(wxCommandEvent& event){
-    wxMessageBox(_("Modify Button Clicked "));
-}
-
 void SellObjectFrame::MenuButtonClick(wxFrame* frame){
     MenuFrame* addframe = new MenuFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
     addframe->Show(true);
@@ -352,12 +341,7 @@ void SellObjectFrame::AddItem(wxPanel* panel,wxBoxSizer* panelSizer,MyScrolledWi
     parentPanel->Refresh();
     count++;
 }
-void SellObjectFrame::SellButtonClick(wxCommandEvent& event){
-    wxMessageBox(_("Sell Button Clicked"));
-}
-void SellObjectFrame::BuyButtonClick(wxCommandEvent& event){
-    wxMessageBox(_("Buy Button Clicked"));
-}
+
 
 void SellObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,wxTextCtrl* ID,wxTextCtrl* Rate,wxTextCtrl* Quantity){
     wxString enteredText = comboBox->GetValue();
