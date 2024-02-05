@@ -147,6 +147,12 @@ void BuyDetailsVector(const std::vector<std::tuple<int, std::string, int, int>>&
                   << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
     }
 }
-void SearchDetails(std::string name) {
-    std::cout<<name<<endl;
+std::vector<std::tuple<int, std::string, int, int>> SearchDetails(std::string name) {
+    std::cout<<name<<std::endl;
+    std::vector<std::tuple<int, std::string, int, int>> vector1;
+    // std::tuple<int, std::string, int, int> tuple1;
+    vector1.push_back(std::make_tuple(100001, "option 1",100,150));
+    vector1.push_back(std::make_tuple(100002, "option 2",200,250));
+    vector1.push_back(std::make_tuple(100003, "option 3",300,350));
+    return vector1;
 }
