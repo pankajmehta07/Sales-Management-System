@@ -13,6 +13,10 @@
 #include"SellObjectFrame.h"
 #include"BuyObjectFrame.h"
 #include"ShowObjectFrame.h"
+// #include <iostream>
+// #include <mysql_driver.h>
+// #include <mysql_connection.h>
+// #include <cppconn/statement.h>
 
 class myApp : public wxApp{
     public:

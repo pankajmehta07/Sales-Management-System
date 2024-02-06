@@ -226,6 +226,7 @@ void MenuFrame::SearchButtonClick(wxCommandEvent& event){
 }
 void MenuFrame::ModifyButtonClick(wxCommandEvent& event){
     wxMessageBox(_("Modify Button Clicked"));
+    updateDatabase();
     
 }
 void MenuFrame::SellButtonClick(wxCommandEvent& event,wxFrame* frame){

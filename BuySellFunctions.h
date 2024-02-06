@@ -1,3 +1,8 @@
+#include <iostream>
+#include <mysql_driver.h>
+#include <mysql_connection.h>
+#include <cppconn/statement.h>
+
 wxArrayString getNameChoices(){
     std::vector<std::string> objectList = {"Option 1","Option 2", "Option 3","Object 1","Object 2","Object 3", "Subject 1", "Subject 2", "Subject 3"};
     wxArrayString choices;
@@ -155,4 +160,34 @@ std::vector<std::tuple<int, std::string, int, int>> SearchDetails(std::string na
     vector1.push_back(std::make_tuple(100002, "option 2",200,250));
     vector1.push_back(std::make_tuple(100003, "option 3",300,350));
     return vector1;
+}
+
+void updateDatabase(){
+    sql::mysql::MySQL_Driver *driver;
+    sql::Connection *con;
+
+    try {
+        // Create a connection
+        driver = sql::mysql::get_mysql_driver_instance();
+        con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
+
+        // Use the 'con' connection object to perform MySQL operations
+
+        // Select the SMS database
+        con->setSchema("SMS");
+
+        // Add an item to the 'Inventory' table
+        sql::Statement *stmt = con->createStatement();
+        stmt->execute("INSERT INTO Inventory (ID,Name, Rate,Quantity) VALUES (100123,'ExampleItem', 12340, 19)");
+        delete stmt;
+
+        std::cout << "Item added to Inventory successfully." << std::endl;
+
+    } catch (sql::SQLException &e) {
+        std::cerr << "MySQL error: " << e.what() << std::endl;
+        return;
+    }
+
+    // Cleanup
+    delete con;
 }
