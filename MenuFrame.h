@@ -58,6 +58,8 @@ class BuyObjectFrame;
 
 #include "SellObjectFrame.h"
 class SellObjectFrame;
+#include "ModifyInventory.h"
+class ModifyInventory;
 
 
 
@@ -225,8 +227,10 @@ void MenuFrame::SearchButtonClick(wxCommandEvent& event){
     this->Close(true);
 }
 void MenuFrame::ModifyButtonClick(wxCommandEvent& event){
-    wxMessageBox(_("Modify Button Clicked"));
-    updateDatabase();
+    ModifyInventory* addFrame = new ModifyInventory(wxT("Byapar"),this->GetPosition(),wxSize(this->GetSize().GetWidth(),this->GetSize().GetHeight()));
+    addFrame->Show(true);
+    this->Close(true);
+    // updateDatabase();
     
 }
 void MenuFrame::SellButtonClick(wxCommandEvent& event,wxFrame* frame){

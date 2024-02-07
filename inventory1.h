@@ -4,7 +4,7 @@
 
 struct Item {
     std::string name;
-    int quantity;
+    int quantity,id,rate;
 };
 
 class Inventory {
@@ -37,13 +37,15 @@ public:
         }
     }
 
-    void updateQuantity(const std::string& name, int quantity) {
+    void updateQuantity(int id,const std::string& name,int rate ,int quantity) {
         auto it = std::find_if(items.begin(), items.end(), [&](const Item& item) {
             return item.name == name;
         });
 
         if (it != items.end()) {
             it->quantity = quantity;
+            it->rate = rate;
+            it->id=id;
             std::cout << "Quantity updated.\n";
         } else {
             std::cout << "Item not found in inventory.\n";

@@ -160,9 +160,10 @@ std::vector<std::tuple<int, std::string, int, int>> SearchDetails(std::string na
     vector1.push_back(std::make_tuple(100002, "option 2",200,250));
     vector1.push_back(std::make_tuple(100003, "option 3",300,350));
     return vector1;
-}
 
+}
 void updateDatabase(){
+     
     sql::mysql::MySQL_Driver *driver;
     sql::Connection *con;
 
@@ -170,6 +171,8 @@ void updateDatabase(){
         // Create a connection
         driver = sql::mysql::get_mysql_driver_instance();
         con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
+        // con = driver->connect("172.16.6.186:3306", "pankaj", "Pankaj");
+        
 
         // Use the 'con' connection object to perform MySQL operations
 
@@ -178,7 +181,8 @@ void updateDatabase(){
 
         // Add an item to the 'Inventory' table
         sql::Statement *stmt = con->createStatement();
-        stmt->execute("INSERT INTO Inventory (ID,Name, Rate,Quantity) VALUES (100123,'ExampleItem', 12340, 19)");
+        
+        stmt->execute("INSERT INTO Inventory (ID,Name, Rate,Quantity) VALUES (12123,'Noodles',25,30)");
         delete stmt;
 
         std::cout << "Item added to Inventory successfully." << std::endl;
