@@ -11,24 +11,32 @@ class ModifyInventory : public wxFrame{
         ModifyInventory(const wxString& title,const wxPoint& pos,const wxSize& size);
     
     private:
+    wxComboBox* comboBox;
     wxPanel* MenuPanel;
     wxBoxSizer* MenuPanelSizer;
     wxTextCtrl* rateCtrl;
     wxTextCtrl* qtyCtrl;
     wxStaticText* rateText;
+    wxStaticText* IDText;
     wxStaticText* qtyText;
     wxBoxSizer* contentPanelSizer; 
-    int count=1, nameid, rateid, qtyid;
+    wxBoxSizer* ContentSizer; 
+    int id,rate,qty;
     wxArrayString choices = getNameChoices();
+    wxButton* UpdateButton;
 
 
     // Menu Click 
         void OnQuit(wxCommandEvent& event);
+        void hideContentSizer();
         void OnHello(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
         void onClose(wxCloseEvent& event);
         void SearchButtonClick(wxCommandEvent& event);
+        void OnNameEntered(wxCommandEvent& event);
+        void UpdateButtonClick(wxCommandEvent& event);
         void MenuButtonClick(wxFrame*);
+
         wxDECLARE_EVENT_TABLE();
 };
 
@@ -128,10 +136,14 @@ ModifyInventory::ModifyInventory(const wxString& title,const wxPoint& pos,const 
     wxBoxSizer* newTopicPanelSizer = new wxBoxSizer(wxVERTICAL);
     newTopicPanel->SetSizer(newTopicPanelSizer);
     newTopicPanelSizer->Add(0,20);
-    wxComboBox* comboBox = new wxComboBox(newTopicPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN);
+    comboBox = new wxComboBox(newTopicPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN);
     comboBox->SetHint("Name");
     newTopicPanelSizer->Add(comboBox,1,wxCENTER,5);
     newTopicPanelSizer->Add(0,20);
+
+    comboBox->Bind(wxEVT_TEXT, [this](wxCommandEvent& event) {
+        OnNameEntered(event);
+        });
 
     wxPanel* contentPanel = new wxPanel(MenuPanel,wxID_ANY);
     MenuPanelSizer->Add(contentPanel,1,wxEXPAND);
@@ -139,17 +151,25 @@ ModifyInventory::ModifyInventory(const wxString& title,const wxPoint& pos,const 
     contentPanel->SetSizer(contentPanelSizer);
     
     // contentPanelSizer->Add(0,50);
-    wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-    rateText = new wxStaticText(contentPanel,wxID_ANY,wxT("Rate: "), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
-    ContentSizer->Add(rateText,0,wxCENTER,5);
+    ContentSizer=new wxBoxSizer(wxHORIZONTAL);
+    IDText = new wxStaticText(contentPanel,wxID_ANY,wxT("Product ID : "), wxDefaultPosition, wxSize(100, 35));
+    ContentSizer->Add(IDText,0,wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL,5);
+    // ContentSizer->Add(50,0);
+    contentPanelSizer->Add(ContentSizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
+    contentPanelSizer->Add(0,20);
+
+    ContentSizer=new wxBoxSizer(wxHORIZONTAL);
+    rateText = new wxStaticText(contentPanel,wxID_ANY,wxT("Rate : "), wxDefaultPosition, wxSize(100, 35), wxALIGN_CENTER);
+    ContentSizer->Add(rateText,0,wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL,5);
     ContentSizer->Add(50,0);
     rateCtrl =  new wxTextCtrl(contentPanel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxSize(100,35));
     rateCtrl->SetHint("New Rate");
-    ContentSizer->Add(rateCtrl,0,wxCENTER,5);
-    contentPanelSizer->Add(ContentSizer, 0, wxCENTER, 5);
+    ContentSizer->Add(rateCtrl,0,wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL,5);
+    contentPanelSizer->Add(ContentSizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
     contentPanelSizer->Add(0,20);
+
     ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-    qtyText = new wxStaticText(contentPanel,wxID_ANY,wxT("Quantity: "), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
+    qtyText = new wxStaticText(contentPanel,wxID_ANY,wxT("Quantity : "), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
     ContentSizer->Add(qtyText,0,wxCENTER,5);
     ContentSizer->Add(50,0);
     qtyCtrl =  new wxTextCtrl(contentPanel,wxID_ANY,wxEmptyString, wxDefaultPosition, wxSize(100,35));
@@ -158,10 +178,13 @@ ModifyInventory::ModifyInventory(const wxString& title,const wxPoint& pos,const 
     contentPanelSizer->Add(ContentSizer, 0, wxCENTER, 5);
     contentPanelSizer->Add(0,20);
     ContentSizer=new wxBoxSizer(wxHORIZONTAL);
-    wxButton* UpdateButton = new wxButton(contentPanel,wxID_ANY,"Update");
+    UpdateButton = new wxButton(contentPanel,wxID_ANY,"Update");
     ContentSizer->Add(UpdateButton,0,wxLEFT,20);
     contentPanelSizer->Add(ContentSizer, 0, wxCENTER, 5);
-    contentPanelSizer->Show(wxFalse);
+    UpdateButton->Enable(false);
+    UpdateButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
+            UpdateButtonClick(event);
+    });
 
     wxPanel* AddItemPanel = new wxPanel(MenuPanel,wxID_ANY);
     MenuPanelSizer->Add(AddItemPanel,0,wxEXPAND|wxALL,10);
@@ -173,9 +196,6 @@ ModifyInventory::ModifyInventory(const wxString& title,const wxPoint& pos,const 
     wxButton* AddItemButton = new wxButton(AddItemPanel,add::AddItemId,"Add Item");
     AddItemSizer->Add(AddItemButton,0,wxRIGHT,20);
 
-    // AddItemButton->Bind(wxEVT_BUTTON, [this, contentPanel,contentPanelSizer,MenuPanel,MenuPanelSizer](wxCommandEvent& event) {
-    //         AddItem(contentPanel,contentPanelSizer,MenuPanel,MenuPanelSizer);
-    // });
     MenuButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
             MenuButtonClick(this);
     });
@@ -189,6 +209,7 @@ ModifyInventory::ModifyInventory(const wxString& title,const wxPoint& pos,const 
 
     CreateStatusBar();
     SetStatusText(wxT("Status Bar"));
+    // hideContentSizer();
 }
 
 
@@ -241,5 +262,69 @@ void ModifyInventory::MenuButtonClick(wxFrame* frame){
     frame->Close(true);
 }
 
+void ModifyInventory::OnNameEntered(wxCommandEvent& event){
+    wxString enteredText = comboBox->GetValue();
+    // wxArrayString filteredSuggestions;
+    for (size_t i = 0; i < choices.GetCount(); i++){
+        wxString choice = choices[i];
+        if (choice.Lower()==enteredText.Lower())
+        {   
+            std::tuple<int, int,int> productDetails = getInventoryonName(enteredText.Lower().ToStdString());
+            IDText->SetLabel(wxString::Format("ID :  %d", std::get<0>(productDetails)));
+            rateText->SetLabel(wxString::Format("Rate :  %d", std::get<1>(productDetails)));
+            qtyText->SetLabel(wxString::Format("Quantity :  %d", std::get<2>(productDetails)));
+            rateCtrl->SetValue(wxString::Format("%d", std::get<1>(productDetails)));
+            qtyCtrl->SetValue(wxString::Format("%d", std::get<2>(productDetails)));
+            // IDText->SetLabel(wxString::Format("Product ID :\t%d", 12032));
+            // rateText->SetLabel(wxString::Format("Rate :\t%d", 250));
+            // qtyText->SetLabel(wxString::Format("Quantity :\t%d",10));
+            // rateCtrl->SetValue(wxString::Format("%d", 250));
+            // qtyCtrl->SetValue(wxString::Format("%d",10));
 
+            id = std::get<0>(productDetails);
+            rate = std::get<1>(productDetails);
+            qty = std::get<2>(productDetails);
+            // id = 12032;
+            // rate = 250;
+            // qty = 10;
+            UpdateButton->Enable(true);
+            event.Skip();
+            return;
+        }
+    }
+    id = 0;
+    rate = 0;
+    qty = 0;
+    IDText->SetLabel(wxT("Product ID : "));
+    rateText->SetLabel(wxT("Rate : "));
+    qtyText->SetLabel(wxT("Quantity : "));
+    rateCtrl->SetValue(wxEmptyString);
+    qtyCtrl->SetValue(wxEmptyString);
+    UpdateButton->Enable(false);
+    event.Skip();
+    
+}
+
+void ModifyInventory::UpdateButtonClick(wxCommandEvent& event){
+    wxString enteredText = comboBox->GetValue();
+    std::vector<std::tuple<int, std::string,int, int>> DetailsVector;
+    int qtyValue,rateValue;
+    if(qtyCtrl->GetValue()!=""){
+        qtyValue = std::stoi(qtyCtrl->GetValue().ToStdString());
+    }
+    else{
+         qtyValue = qty;
+    }
+    if(rateCtrl->GetValue()!=""){
+        rateValue = std::stoi(rateCtrl->GetValue().ToStdString());
+    }
+    else{
+         rateValue = rate;
+    }
+    DetailsVector.push_back(std::make_tuple(id,enteredText.ToStdString(),rateValue,qtyValue));
+    ModifyDetails(DetailsVector);
+    ModifyInventory* addFrame = new ModifyInventory(wxT("Byapar"),this->GetPosition(),wxSize(this->GetSize().GetWidth(),this->GetSize().GetHeight()));
+    addFrame->Show(true);
+    this->Close(true);
+}
 #endif

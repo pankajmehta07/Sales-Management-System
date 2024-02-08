@@ -411,7 +411,7 @@ void BuyObjectFrame::OnIDEntered(wxCommandEvent& event,wxTextCtrl* ID){
 
 void BuyObjectFrame::ConfirmDetails(wxCommandEvent& event){
     std::vector<std::tuple<int, std::string,int, int>> DetailsVector;
-    std::tuple<int, std::string,int, int> details;
+    // std::tuple<int, std::string,int, int> details;
     std::string message,IDValue,nameValue,rateValue,qtyValue;
     message = "ID\t\tP.Name\tRate\tQty\n";
     for (int i = 0; i < IDVectors.size(); i++) {

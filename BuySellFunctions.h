@@ -74,7 +74,7 @@ wxArrayString getIDChoices(){
 
 
 
-std::tuple<std::string, int> getProductDetailsOnIDGiven(const int id) {
+std::tuple<int, int,int > getInventoryonName(const std::string& name) {
     /*
     This is a function in which the details of the product will be returned when the product ID is given as argument.
     Parameters:
@@ -85,45 +85,56 @@ std::tuple<std::string, int> getProductDetailsOnIDGiven(const int id) {
     */
 
 
-    std::string name;
+
+    int id = 10000;
+    int qty = 10;
     int rate = 400;
-    if(id==10001){
-        name=="option 1";
+    if(name=="option 1"){
         rate = 100;    
+        id = 10001;
+        qty = 12;
     }
-    else if(id==10002){
+    else if(name=="option 2"){
         rate = 200;    
-        name="option 2";
+        id = 10002;
+        qty = 1223;
     }
-    else if(id==10003){
+    else if(name=="option 3"){
         rate = 300;    
-        name="option 3";
+        id = 10003;
+        qty = 124;
     }
-    else if(id==10004){
+    else if(name=="object 1"){
         rate = 1100;    
-        name="object 1";
+        id = 10004;
+        qty = 13;
     }
-    else if(id==10005){
+    else if(name=="object 2"){
         rate = 1200;    
-        name="object 2";
+        id = 10005;
+        qty = 13;
     }
-    else if(id==10006){
+    else if(name=="object 3"){
         rate = 1300;    
-        name="object 3";
+        id = 10006;
+        qty = 154;
     }
-    else if(id==10007){
+    else if(name=="subject 1"){
         rate = 2100;    
-        name="subject 1";
+        id = 10007;
+        qty = 165;
     }
-    else if(id==10008){
+    else if(name=="subject 2"){
         rate = 2200;    
-        name="subject 2";
+        id = 10008;
+        qty = 1243;
     }
-    else if(id==10009){
+    else if(name=="subject 3"){
         rate = 2300;    
-        name="subject 3";
+        id = 10009;
+        qty = 124;
     }
-    return std::make_tuple(name, rate);
+    return std::make_tuple(id, rate,qty);
 }
 
 
@@ -161,6 +172,18 @@ std::vector<std::tuple<int, std::string, int, int>> SearchDetails(std::string na
     vector1.push_back(std::make_tuple(100003, "option 3",300,350));
     return vector1;
 
+}
+void ModifyDetails(const std::vector<std::tuple<int, std::string, int, int>>& detailsVector) {
+    for (const auto& details : detailsVector) {
+        int IDValue = std::get<0>(details);
+        std::string nameValue = std::get<1>(details);
+        int rateValue = std::get<2>(details);
+        int qtyValue = std::get<3>(details);
+
+        // Process the details or print them
+        std::cout << "ID: " << IDValue << "\tName: " << nameValue
+                  << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
+    }
 }
 void updateDatabase(){
      
