@@ -150,7 +150,7 @@ void SellDetailsVector(const std::vector<std::tuple<int, std::string, int, int>>
                   << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
     }
 }
-
+void BuyUpdateDB();
 void BuyDetailsVector(const std::vector<std::tuple<int, std::string, int, int>>& detailsVector) {
     for (const auto& details : detailsVector) {
         int IDValue = std::get<0>(details);
@@ -161,7 +161,9 @@ void BuyDetailsVector(const std::vector<std::tuple<int, std::string, int, int>>&
         // Process the details or print them
         std::cout << "ID: " << IDValue << "\tName: " << nameValue
                   << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
+    BuyUpdateDB();
     }
+
 }
 std::vector<std::tuple<int, std::string, int, int>> SearchDetails(std::string name) {
     std::cout<<name<<std::endl;
@@ -171,30 +173,14 @@ std::vector<std::tuple<int, std::string, int, int>> SearchDetails(std::string na
     vector1.push_back(std::make_tuple(100002, "option 2",200,250));
     vector1.push_back(std::make_tuple(100003, "option 3",300,350));
     return vector1;
-
-}
-void ModifyDetails(const std::vector<std::tuple<int, std::string, int, int>>& detailsVector) {
-    for (const auto& details : detailsVector) {
-        int IDValue = std::get<0>(details);
-        std::string nameValue = std::get<1>(details);
-        int rateValue = std::get<2>(details);
-        int qtyValue = std::get<3>(details);
-
-        // Process the details or print them
-        std::cout << "ID: " << IDValue << "\tName: " << nameValue
-                  << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
-    }
-}
-void updateDatabase(){
-     
     sql::mysql::MySQL_Driver *driver;
     sql::Connection *con;
 
     try {
         // Create a connection
         driver = sql::mysql::get_mysql_driver_instance();
-        con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
-        // con = driver->connect("172.16.6.186:3306", "pankaj", "Pankaj");
+        // con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
+        con = driver->connect("172.16.1.145:3306", "pankaj", "Pankaj");
         
 
         // Use the 'con' connection object to perform MySQL operations
@@ -204,8 +190,10 @@ void updateDatabase(){
 
         // Add an item to the 'Inventory' table
         sql::Statement *stmt = con->createStatement();
-        
-        stmt->execute("INSERT INTO Inventory (ID,Name, Rate,Quantity) VALUES (12123,'Noodles',25,30)");
+        wxString str = wxString::Format("SELECT *FROM Inventory WHERE IName=\"%s\";" ,nameValue);
+        // wxString str = wxString::Format("INSERT INTO Inventory (ID,Name, Rate,Quantity) VALUES (%d,\"%s\",%d,%d)", IDValue,nameValue,rateValue,qtyValue);
+     
+        stmt->execute(str.ToStdString());
         delete stmt;
 
         std::cout << "Item added to Inventory successfully." << std::endl;
@@ -218,3 +206,112 @@ void updateDatabase(){
     // Cleanup
     delete con;
 }
+
+
+void updateDatabase();
+void ModifyDetails(const std::vector<std::tuple<int, std::string, int, int>>& detailsVector) {
+    for (const auto& details : detailsVector) {
+        int IDValue = std::get<0>(details);
+        std::string nameValue = std::get<1>(details);
+        int rateValue = std::get<2>(details);
+        int qtyValue = std::get<3>(details);
+
+        // Process the details or print them
+        std::cout << "ID: " << IDValue << "\tName: " << nameValue
+                  << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
+    }
+    updateDatabase();
+}
+void updateDatabase(){
+     
+    sql::mysql::MySQL_Driver *driver;
+    sql::Connection *con;
+
+    try {
+        // Create a connection
+        driver = sql::mysql::get_mysql_driver_instance();
+        // con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
+        con = driver->connect("172.16.1.145:3306", "pankaj", "Pankaj");
+        
+
+        // Use the 'con' connection object to perform MySQL operations
+
+        // Select the SMS database
+        con->setSchema("SMS");
+
+        // Add an item to the 'Inventory' table
+        sql::Statement *stmt = con->createStatement();
+        int IDValue = 12421;
+        std::string nameValue = "Bottle";
+        int rateValue = 1300;
+        int qtyValue = 25;
+        wxString str = wxString::Format("UPDATE Inventory SET Rate=%d, Quantity=%d WHERE ID=%d and Name=\"%s\";", rateValue,qtyValue,IDValue,nameValue);
+        // wxString str = wxString::Format("INSERT INTO Inventory (ID,Name, Rate,Quantity) VALUES (%d,\"%s\",%d,%d)", IDValue,nameValue,rateValue,qtyValue);
+     
+        stmt->execute(str.ToStdString());
+        delete stmt;
+
+        std::cout << "Item added to Inventory successfully." << std::endl;
+
+    } catch (sql::SQLException &e) {
+        std::cerr << "MySQL error: " << e.what() << std::endl;
+        return;
+    }
+
+    // Cleanup
+    delete con;
+}
+void BuyUpdateDB() {
+    sql::mysql::MySQL_Driver *driver;
+    sql::Connection *con;
+
+    try {
+        int IDValue = 29390;
+            std::string nameValue = "Rohan";
+            int rateValue = 1000;
+            int qtyValue = 5;
+        // Create a connection
+        driver = sql::mysql::get_mysql_driver_instance();
+        con = driver->connect("172.16.1.145:3306", "pankaj", "Pankaj");
+
+        // Select the SMS database
+        con->setSchema("SMS");
+
+        // Check if the ID is already in the database
+        sql::Statement *check = con->createStatement();
+        std::string checkQuery = "SELECT COUNT(*) FROM Inventory WHERE ID=" + std::to_string(IDValue);
+        sql::ResultSet *result = check->executeQuery(checkQuery);
+        result->next();
+        int rowCount = result->getInt(1);
+        delete result;
+        delete check;
+
+        if (rowCount > 0) {
+            // Case 1: ID already in database, update the existing record
+            sql::Statement *updateStmt = con->createStatement();
+            wxString updateStr = wxString::Format("UPDATE Inventory SET Rate=%d, Quantity=%d WHERE ID=%d;", rateValue, qtyValue, IDValue);
+            updateStmt->execute(updateStr.ToStdString());
+            delete updateStmt;
+            std::cout << "Item updated in Inventory successfully." << std::endl;
+        } else {
+            // Case 2: ID not in database, insert a new record
+            sql::Statement *insertStmt = con->createStatement();
+            wxString insertStr = wxString::Format("INSERT INTO Inventory (ID, Name, Rate, Quantity) VALUES (%d, \"%s\", %d, %d);", IDValue, nameValue, rateValue, qtyValue);
+            insertStmt->execute(insertStr.ToStdString());
+            delete insertStmt;
+            std::cout << "Item added to Inventory successfully." << std::endl;
+        }
+
+    } catch (sql::SQLException &e) {
+        std::cerr << "MySQL error: " << e.what() << std::endl;
+        return;
+    }
+
+    // Cleanup
+    delete con;
+}
+
+
+// NOTE:
+// Get last row of the table
+// SELECT * FROM Inventory ORDER BY ID DESC LIMIT 1;
