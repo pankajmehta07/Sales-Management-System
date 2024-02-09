@@ -1,61 +1,47 @@
 #include <iostream>
+#include <vector>
 #include <mysql_driver.h>
 #include <mysql_connection.h>
 #include <cppconn/statement.h>
-struct Item {
-    std::string name;
-    int quantity,id,rate;
-};
+using namespace std;
 
-class Inventory {
-private:
-    std::vector<Item> items;
-
-
-    void updateQuantity(int id,const std::string& name,int rate ,int quantity) {
-        auto it = std::find_if(items.begin(), items.end(), [&](const Item& item) {
-            return item.name == name;
-        });
-
-        if (it != items.end()) {
-            it->quantity = quantity;
-            it->rate = rate;
-            it->id=id;
-            std::cout << "Quantity updated.\n";
-        } else {
-            std::cout << "Item not found in inventory.\n";
-        }
-    }};
-void updateDatabase(){
-     
-    sql::mysql::MySQL_Driver *driver;
-    sql::Connection *con;
-
-    try {
-        // Create a connection
-        driver = sql::mysql::get_mysql_driver_instance();
-        // con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
-        con = driver->connect("172.16.6.186:3306", "pankaj", "Pankaj");
-        
-
-        // Use the 'con' connection object to perform MySQL operations
-
-        // Select the SMS database
-        con->setSchema("SMS");
-
-        // Add an item to the 'Inventory' table
-        sql::Statement *stmt = con->createStatement();
-        
-        stmt->execute("INSERT INTO Inventory (ID,Name, Rate,Quantity) VALUES (id,name,rate,quantity)");
-        delete stmt;
-
-        std::cout << "Item added to Inventory successfully." << std::endl;
-
-    } catch (sql::SQLException &e) {
-        std::cerr << "MySQL error: " << e.what() << std::endl;
-        return;
-    }
-
-    // Cleanup
-    delete con;
+class Product{
+    int ID,Rate,Quantity;
+    std::string Name;
+    std::vector<Product>productVector;
 }
+public:
+Product(){}
+
+Product(int id,std::string n,int r, int q):ID(i),Name(n),Rate(r),Quantity(q){}
+
+std::tuple<int, std::string, int, int> getInfo()
+for (const auto& product : productVector){
+    int id= this->ID;
+    std::string name= this->Name;
+    int rate= this->Rate;
+    int quantity= this->Quantity;
+
+    return std::make_tuple(id,name,rate,qty);
+
+}
+
+std::tuple<int, std::string, int, int> GetInfo()
+for (const auto& product : productVector){
+    int id= this->ID;
+    std::string name= this->Name;
+    int rate= this->Rate;
+    int quantity= this->Quantity;
+
+    return std::make_tuple(id,name,rate,qty);
+
+}
+
+Product setInfo (std::tuple<int, std::string, int, int> details){
+     this->ID = std::get<0>(details);
+     this->Name = std::get<1>(details);
+     this->Rate = std::get<2>(details);
+     this->Quantity = std::get<3>(details);
+}
+
+
