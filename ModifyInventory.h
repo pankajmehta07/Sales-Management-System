@@ -244,6 +244,7 @@ void ModifyInventory::onClose(wxCloseEvent& event){
             return;
         }
     }
+    delete con;
     Destroy();
 }
 

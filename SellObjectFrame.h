@@ -270,6 +270,7 @@ void SellObjectFrame::onClose(wxCloseEvent& event){
             return;
         }
     }
+    delete con;
     Destroy();
 }
 

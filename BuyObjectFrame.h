@@ -271,6 +271,7 @@ void BuyObjectFrame::onClose(wxCloseEvent& event){
             return;
         }
     }
+    delete con;
     Destroy();
 }
 

@@ -216,6 +216,7 @@ void MenuFrame::onClose(wxCloseEvent& event){
             return;
         }
     }
+    delete con;
     Destroy();
 }
 

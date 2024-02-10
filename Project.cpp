@@ -7,6 +7,7 @@
 #include <array>
 #include <tuple>
 #include"id.h"
+#include"Database.h"
 #include"BuySellFunctions.h"
 #include"MenuFrame.h"
 #include"AddObjectFrame.h"
