@@ -235,8 +235,8 @@ void SearchObjectFrame::SearchButtonClick(wxCommandEvent& event){
     } 
     else{
         display = 0;
-        std::vector<std::tuple<int, std::string, int, int>> vector1;
-        vector1 = SearchDetails(name.ToStdString());
+        std::vector<Product> vector1;
+        vector1 = showItemDetails(name.ToStdString());
         wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
         ContentSizer->Add(20,0);
         wxStaticText* text= new wxStaticText(contentPanel,wxID_ANY,wxT("ID"), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
@@ -263,11 +263,11 @@ void SearchObjectFrame::SearchButtonClick(wxCommandEvent& event){
         MenuPanelSizer->Layout();
         MenuPanelSizer->FitInside(MenuPanel);
         MenuPanel->Refresh();
-        for (const auto& item : vector1) {
-            int id = std::get<0>(item);
-            std::string name = std::get<1>(item);
-            int rate = std::get<2>(item);
-            int quantity = std::get<3>(item);
+        for (auto& product : vector1) {
+            int id = product.getID();
+            std::string name =product.getName();
+            int rate = product.getRate();
+            int quantity = product.getQty();
             wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
             ContentSizer->Add(20,0);
             wxStaticText* text= new wxStaticText(contentPanel,wxID_ANY,wxString::Format("%d", id), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);

@@ -2,6 +2,7 @@
 #include <mysql_driver.h>
 #include <mysql_connection.h>
 #include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h> 
 #include"Product.h"
 
 std::vector<std::tuple<int, std::string, int, int>> SearchDetails(std::string name) {
@@ -13,45 +14,36 @@ std::vector<std::tuple<int, std::string, int, int>> SearchDetails(std::string na
     vector1.push_back(std::make_tuple(100003, "option 3",300,350));
     return vector1;
 }
-// void showItemDetails(const std::string& itemName) {
-    // sql::mysql::MySQL_Driver *driver;
-    // sql::Connection *con;
+std::vector<Product> showItemDetails(const std::string& itemName) {
+    std::vector<Product> products;
+    try {
+        connectToDatabase();
+        wxString updateStr = wxString::Format("SELECT * FROM Inventory WHERE Name LIKE '%%%s%%'", itemName);
+        sql::PreparedStatement *stmt = con->prepareStatement(updateStr.ToStdString());
+       sql::ResultSet *res = stmt->executeQuery();
 
-    // try {
-    //     // Create a connection
-    //     driver = sql::mysql::get_mysql_driver_instance();
-    //     // con = driver->connect("172.16.1.145:3306", "pankaj", "Pankaj");
-    //     con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
+        // Display the details
+        while (res->next()) {
+            // std::cout << "ID: " << res->getInt(1) << std::endl;
+            // std::cout << "Name: " << res->getString(2) << std::endl;
+            // std::cout << "Rate: " << res->getInt(3) << std::endl;
+            // std::cout << "Quantity: " << res->getInt(4) << std::endl;
+            Product p(res->getInt(1),res->getString(2),res->getInt(3),res->getInt(4));
+            products.push_back(p);
 
-    //     // Select the SMS database
-    //     con->setSchema("SMS");
-    //     // "%"
+        }
 
-    //     // Retrieve details from the 'Inventory' table based on the item name
-    //     wxString updateStr = wxString::Format("SELECT * FROM Inventory WHERE Name LIKE \"%%s%\"",itemName);
-    //     sql::PreparedStatement *stmt = con->prepareStatement(updateStr.ToStdString());
-    //     stmt->setString(1, itemName);
+        delete res;
+        delete stmt;
 
-    //     sql::ResultSet *res = stmt->executeQuery();
 
-    //     // Display the details
-    //     while (res->next()) {
-    //         std::cout << "ID: " << res->getInt("ID") << std::endl;
-    //         std::cout << "Name: " << res->getString("Name") << std::endl;
-    //         std::cout << "Rate: " << res->getInt("Rate") << std::endl;
-    //         std::cout << "Quantity: " << res->getInt("Quantity") << std::endl;
-    //     }
 
-    //     delete res;
-    //     delete stmt;
+    } catch (sql::SQLException &e) {
+        std::cerr << "MySQL error: " << e.what() << std::endl;
+        // return ;
+    }
 
-    // } catch (sql::SQLException &e) {
-    //     std::cerr << "MySQL error: " << e.what() << std::endl;
-    //     return;
-    // }
-
-    // // Cleanup
-    // delete con;
     // std::cout<<"Show Items Details";
+    return products;
 
-// }
+}
