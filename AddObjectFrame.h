@@ -340,56 +340,56 @@ void AddObjectFrame::BuyButtonClick(wxCommandEvent& event){
 
 
 void AddObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,wxTextCtrl* ID,wxTextCtrl* Rate,wxTextCtrl* Quantity){
-    wxString enteredText = comboBox->GetValue();
-    wxArrayString filteredSuggestions;
-    for (size_t i = 0; i < choices.GetCount(); i++){
-        wxString choice = choices[i];
-        if (choice.Lower()==enteredText.Lower())
-        {   
+    // wxString enteredText = comboBox->GetValue();
+    // wxArrayString filteredSuggestions;
+    // for (size_t i = 0; i < choices.GetCount(); i++){
+    //     wxString choice = choices[i];
+    //     if (choice.Lower()==enteredText.Lower())
+    //     {   
 
-            filteredSuggestions.Add(choice);
-            // comboBox->Clear();
-            if(comboBox->IsListEmpty()){
-                comboBox->Insert(filteredSuggestions,0);
-            }
-            else{
-                wxArrayString lists = comboBox->GetStrings();
-                for (size_t i = 0; i < lists.GetCount(); i++){
-                    comboBox->Delete(0);
-                }
-            }
-            comboBox->Append(filteredSuggestions);;
+    //         filteredSuggestions.Add(choice);
+    //         // comboBox->Clear();
+    //         if(comboBox->IsListEmpty()){
+    //             comboBox->Insert(filteredSuggestions,0);
+    //         }
+    //         else{
+    //             wxArrayString lists = comboBox->GetStrings();
+    //             for (size_t i = 0; i < lists.GetCount(); i++){
+    //                 comboBox->Delete(0);
+    //             }
+    //         }
+    //         comboBox->Append(filteredSuggestions);;
             
-            std::tuple<int, int> productDetails = getProductDetailsOnNameGiven(enteredText.Lower().ToStdString());
-            ID->SetValue(wxString::Format("%d", std::get<0>(productDetails)));
-            Rate->SetValue(wxString::Format("%d", std::get<1>(productDetails)));
-            Quantity->SetValue(wxT("1"));
-            event.Skip();
-            return;
-        }
-        else if (choice.Lower().Contains(enteredText.Lower()))
-        {
-            filteredSuggestions.Add(choice);
+    //         std::tuple<int, int> productDetails = getProductDetailsOnNameGiven(enteredText.Lower().ToStdString());
+    //         ID->SetValue(wxString::Format("%d", std::get<0>(productDetails)));
+    //         Rate->SetValue(wxString::Format("%d", std::get<1>(productDetails)));
+    //         Quantity->SetValue(wxT("1"));
+    //         event.Skip();
+    //         return;
+    //     }
+    //     else if (choice.Lower().Contains(enteredText.Lower()))
+    //     {
+    //         filteredSuggestions.Add(choice);
             
-        }
-    }
-    ID->SetValue(wxString::Format("%d", 0));
-    Rate->SetValue(wxString::Format("%d", 0));
-    Quantity->SetValue(wxT("0"));
-    // comboBox->Clear();
-    if(comboBox->IsListEmpty()){
-        comboBox->Append(filteredSuggestions);
-    }
-    else{
-        wxArrayString lists = comboBox->GetStrings();
-        for (size_t i = 0; i < lists.GetCount(); i++){
-            comboBox->Delete(0);
-        }
-    }
-    comboBox->Append(filteredSuggestions);
-    // comboBox->Set(filteredSuggestions);  // If this runs then no need to add the clear statement and all the above deleting loops and if conditions. Try this in windows.
+    //     }
+    // }
+    // ID->SetValue(wxString::Format("%d", 0));
+    // Rate->SetValue(wxString::Format("%d", 0));
+    // Quantity->SetValue(wxT("0"));
+    // // comboBox->Clear();
+    // if(comboBox->IsListEmpty()){
+    //     comboBox->Append(filteredSuggestions);
+    // }
+    // else{
+    //     wxArrayString lists = comboBox->GetStrings();
+    //     for (size_t i = 0; i < lists.GetCount(); i++){
+    //         comboBox->Delete(0);
+    //     }
+    // }
+    // comboBox->Append(filteredSuggestions);
+    // // comboBox->Set(filteredSuggestions);  // If this runs then no need to add the clear statement and all the above deleting loops and if conditions. Try this in windows.
 
-    event.Skip();
+    // event.Skip();
     
 }
 

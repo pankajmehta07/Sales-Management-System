@@ -8,18 +8,15 @@ public:
     MyScrolledWindow(wxWindow* parent, wxWindowID id = wxID_ANY, int scrollbarOrientation = wxBOTH)
         : wxScrolledWindow(parent, id)
     {
-        // Set up the scrollbar
         SetScrollbar(scrollbarOrientation, 0, 10, 100);
         SetScrollRate(5, 5);
     }
 
 private:
-    // Event handlers, if needed
 
     wxDECLARE_EVENT_TABLE();
 };
 wxBEGIN_EVENT_TABLE(MyScrolledWindow, wxScrolledWindow)
-    // Event handling, if needed
 wxEND_EVENT_TABLE()
 
 
@@ -32,18 +29,14 @@ class MenuFrame : public wxFrame{
     private:
     wxPanel* MenuPanel;
     wxBoxSizer* MenuPanelSizer;
-
-    // Menu Click 
         void OnQuit(wxCommandEvent& event);
         void OnHello(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
         void onClose(wxCloseEvent& event);
-        // Buttons Click 
         void ModifyButtonClick(wxCommandEvent& event);
         void BuyButtonClick(wxCommandEvent& event,wxFrame*);
         void SellButtonClick(wxCommandEvent& event,wxFrame*);
         void SearchButtonClick(wxCommandEvent& event);
-        // void AddButtonClick(wxFrame*);
         wxDECLARE_EVENT_TABLE();
 };
 
@@ -70,8 +63,6 @@ wxBEGIN_EVENT_TABLE(MenuFrame, wxFrame)
     EVT_CLOSE(MenuFrame::onClose)
 
     EVT_BUTTON(menu::modifyButtonId,MenuFrame::ModifyButtonClick)
-    // EVT_BUTTON(menu::buyButtonId,MenuFrame::BuyButtonClick)
-    // EVT_BUTTON(menu::sellButtonId,MenuFrame::SellButtonClick)
     EVT_BUTTON(menu::searchButtonId,MenuFrame::SearchButtonClick)
 wxEND_EVENT_TABLE();
 
@@ -79,7 +70,7 @@ wxEND_EVENT_TABLE();
 
 
 MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size):wxFrame(NULL,wxID_ANY,title,pos,size){
-    // SetIcon(wxIcon(wxT("photo.ico")));
+   
     SetMinSize(wxSize(750,540));
     
     wxMenu *menuFile = new wxMenu;
@@ -101,9 +92,6 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     menuBar->Append(menuHelp, "&Help");
 
     SetMenuBar(menuBar);
-
-
-    // Menu Contents
 
     wxBoxSizer* MainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -129,8 +117,6 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     SellerPhoneNumber->SetFont(font3);
     SellerPanelSizer->Add(SellerPhoneNumber,1,wxALIGN_CENTER|wxALL,0);
 
-    // SellerPanelSizer->Add(0,8);
-
     wxStaticLine* separatorLine = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
     wxColour separatorColour(150,150,150);
     separatorLine->SetForegroundColour(separatorColour);
@@ -139,7 +125,6 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     MainSizer->Add(separatorLine, 0, wxEXPAND | wxALL, 3);
     
     wxPanel* MenuPanel = new wxPanel(this,wxID_ANY);
-    // MenuPanel->SetBackgroundColour(wxColour(200,200,100));
     MainSizer->Add(MenuPanel,1,wxEXPAND);
     wxBoxSizer* MenuPanelSizer = new wxBoxSizer(wxVERTICAL);
     MenuPanel->SetSizer(MenuPanelSizer);
@@ -152,14 +137,10 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
     BuyObjectButton->SetToolTip("Buy Items");
     wxButton*  SellObjectButton= new wxButton(MenuPanel,menu::sellButtonId,"Sell Items");
     SellObjectButton->SetToolTip("Sell Items");
-    // wxButton* AddObjectButton = new wxButton(MenuPanel,menu::addButtonId,"Add Item ");
     wxButton* ModifyObjectButton = new wxButton(MenuPanel,menu::modifyButtonId,"Modify Inventory");
     ModifyObjectButton->SetToolTip("Modify Inventory");
     
 
-    // AddObjectButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
-    //         AddButtonClick(this);
-    //     });
     BuyObjectButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
             BuyButtonClick(event,this);
         });
@@ -173,7 +154,6 @@ MenuFrame::MenuFrame(const wxString& title,const wxPoint& pos,const wxSize& size
 
     MenuPanelSizer->Add(BuyObjectButton,0,wxALIGN_CENTER|wxALL,5);
     MenuPanelSizer->Add(SellObjectButton,0,wxALIGN_CENTER|wxALL,5);
-    // MenuPanelSizer->Add(AddObjectButton,0,wxALIGN_CENTER|wxALL,5);
     MenuPanelSizer->Add(ModifyObjectButton,0,wxALIGN_CENTER|wxALL,5);
 
 
@@ -216,7 +196,7 @@ void MenuFrame::onClose(wxCloseEvent& event){
             return;
         }
     }
-    delete con;
+    // delete con;
     Destroy();
 }
 
@@ -237,12 +217,12 @@ void MenuFrame::ModifyButtonClick(wxCommandEvent& event){
 void MenuFrame::SellButtonClick(wxCommandEvent& event,wxFrame* frame){
     SellObjectFrame* addFrame = new SellObjectFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
     addFrame->Show(true);
-    frame->Close(true);
+    this->Close(true);
 }
 void MenuFrame::BuyButtonClick(wxCommandEvent& event,wxFrame* frame){
     BuyObjectFrame* addFrame = new BuyObjectFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
     addFrame->Show(true);
-    frame->Close(true);
+    this->Close(true);
 }
 
 

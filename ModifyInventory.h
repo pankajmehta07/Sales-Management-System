@@ -244,7 +244,7 @@ void ModifyInventory::onClose(wxCloseEvent& event){
             return;
         }
     }
-    delete con;
+    // delete con;
     Destroy();
 }
 
@@ -270,24 +270,16 @@ void ModifyInventory::OnNameEntered(wxCommandEvent& event){
         wxString choice = choices[i];
         if (choice.Lower()==enteredText.Lower())
         {   
-            std::tuple<int, int,int> productDetails = getInventoryonName(enteredText.Lower().ToStdString());
-            IDText->SetLabel(wxString::Format("ID :  %d", std::get<0>(productDetails)));
-            rateText->SetLabel(wxString::Format("Rate :  %d", std::get<1>(productDetails)));
-            qtyText->SetLabel(wxString::Format("Quantity :  %d", std::get<2>(productDetails)));
-            rateCtrl->SetValue(wxString::Format("%d", std::get<1>(productDetails)));
-            qtyCtrl->SetValue(wxString::Format("%d", std::get<2>(productDetails)));
-            // IDText->SetLabel(wxString::Format("Product ID :\t%d", 12032));
-            // rateText->SetLabel(wxString::Format("Rate :\t%d", 250));
-            // qtyText->SetLabel(wxString::Format("Quantity :\t%d",10));
-            // rateCtrl->SetValue(wxString::Format("%d", 250));
-            // qtyCtrl->SetValue(wxString::Format("%d",10));
+            Product p = getInventoryOnName(enteredText.Lower().ToStdString());
+            IDText->SetLabel(wxString::Format("ID :  %d", p.getID()));
+            rateText->SetLabel(wxString::Format("Rate :  %d", p.getRate()));
+            qtyText->SetLabel(wxString::Format("Quantity :  %d", p.getQty()));
+            rateCtrl->SetValue(wxString::Format("%d", p.getRate()));
+            qtyCtrl->SetValue(wxString::Format("%d", p.getQty()));
 
-            id = std::get<0>(productDetails);
-            rate = std::get<1>(productDetails);
-            qty = std::get<2>(productDetails);
-            // id = 12032;
-            // rate = 250;
-            // qty = 10;
+            id = p.getID();
+            rate = p.getRate();
+            qty = p.getQty();
             UpdateButton->Enable(true);
             event.Skip();
             return;
@@ -308,7 +300,8 @@ void ModifyInventory::OnNameEntered(wxCommandEvent& event){
 
 void ModifyInventory::UpdateButtonClick(wxCommandEvent& event){
     wxString enteredText = comboBox->GetValue();
-    std::vector<std::tuple<int, std::string,int, int>> DetailsVector;
+    // std::vector<std::tuple<int, std::string,int, int>> DetailsVector;
+    
     int qtyValue,rateValue;
     if(qtyCtrl->GetValue()!=""){
         qtyValue = std::stoi(qtyCtrl->GetValue().ToStdString());
@@ -322,8 +315,9 @@ void ModifyInventory::UpdateButtonClick(wxCommandEvent& event){
     else{
          rateValue = rate;
     }
-    DetailsVector.push_back(std::make_tuple(id,enteredText.ToStdString(),rateValue,qtyValue));
-    ModifyDetails(DetailsVector);
+    // DetailsVector.push_back(std::make_tuple(id,enteredText.ToStdString(),rateValue,qtyValue));
+    Product p(id,enteredText.ToStdString(),rateValue,qtyValue);
+    updateDatabase(p);
     ModifyInventory* addFrame = new ModifyInventory(wxT("Byapar"),this->GetPosition(),wxSize(this->GetSize().GetWidth(),this->GetSize().GetHeight()));
     addFrame->Show(true);
     this->Close(true);

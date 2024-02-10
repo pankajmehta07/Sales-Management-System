@@ -271,7 +271,7 @@ void BuyObjectFrame::onClose(wxCloseEvent& event){
             return;
         }
     }
-    delete con;
+    // delete con;
     Destroy();
 }
 
@@ -287,7 +287,7 @@ void BuyObjectFrame::SearchButtonClick(wxCommandEvent& event){
 void BuyObjectFrame::MenuButtonClick(wxFrame* frame){
     MenuFrame* addframe = new MenuFrame(wxT("Byapar"),frame->GetPosition(),wxSize(frame->GetSize().GetWidth(),frame->GetSize().GetHeight()));
     addframe->Show(true);
-    frame->Close(true);
+    this->Close(true);
 }
 void BuyObjectFrame::AddItem(wxPanel* panel,wxBoxSizer* panelSizer,MyScrolledWindow* parentPanel,wxBoxSizer* parentSizer){
     std::array<int, 4> id;
@@ -315,9 +315,6 @@ void BuyObjectFrame::AddItem(wxPanel* panel,wxBoxSizer* panelSizer,MyScrolledWin
     wxComboBox* comboBox = new wxComboBox(panel, id[1], wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN );
 
     
-    // comboBox->Bind(wxEVT_CHAR, [this, comboBox](wxKeyEvent& event) {
-    //     OnCharEntered(event,comboBox);
-    // });
     comboBox->SetHint("Name");
     ContentSizer->Add(comboBox,0,wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
@@ -367,15 +364,16 @@ void BuyObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,wx
             }
             comboBox->Append(filteredSuggestions);;
             
-            std::tuple<int, int> productDetails = getProductDetailsOnNameGiven(enteredText.Lower().ToStdString());
-            ID->SetValue(wxString::Format("%d", std::get<0>(productDetails)));
-            Rate->SetValue(wxString::Format("%d", std::get<1>(productDetails)));
+            Product p = getInventoryOnName(enteredText.Lower().ToStdString());
+            ID->SetValue(wxString::Format("%d", p.getID()));
+            Rate->SetValue(wxString::Format("%d", p.getRate()));
             Quantity->SetValue(wxT("1"));
             event.Skip();
             return;
         }
         else if (choice.Lower().Contains(enteredText.Lower()))
         {
+
             filteredSuggestions.Add(choice);
             
         }
@@ -411,40 +409,54 @@ void BuyObjectFrame::OnIDEntered(wxCommandEvent& event,wxTextCtrl* ID){
 }
 
 void BuyObjectFrame::ConfirmDetails(wxCommandEvent& event){
-    std::vector<std::tuple<int, std::string,int, int>> DetailsVector;
-    // std::tuple<int, std::string,int, int> details;
-    std::string message,IDValue,nameValue,rateValue,qtyValue;
-    message = "ID\t\tP.Name\tRate\tQty\n";
+    std::vector<Product> DetailsVector;
+    wxString message,IDValue,nameValue,rateValue,qtyValue,namevar1;
+    std::string namevar;
+    message = "ID\t\t\tP.Name\t\t\tRate\tQty\n";
+    int total=0;
     for (int i = 0; i < IDVectors.size(); i++) {
         wxTextCtrl* IDTextCtrl = wxDynamicCast(FindWindowById(IDVectors[i][0]), wxTextCtrl);
         if (IDTextCtrl){
-            IDValue = IDTextCtrl->GetValue().ToStdString();
+            IDValue = IDTextCtrl->GetValue();
             if(IDValue=="\0"||IDValue=="0"){
-                break;
+                continue;
             }
-            message = message+IDValue+"\t";
 
         }
         wxComboBox* nameBox = wxDynamicCast(FindWindowById(IDVectors[i][1]), wxComboBox);
         if (nameBox){
-            nameValue = nameBox->GetValue().ToStdString();
-            message = message+nameValue+"\t";
+            nameValue = nameBox->GetValue();
+            namevar1 = nameValue;
+            size_t currentLength = namevar1.length();
+            if (currentLength < 30) {
+                namevar1 += wxString(' ', 30 - currentLength);
+            }
+            namevar = namevar1.ToStdString();
+            namevar.resize(30);
 
         }
         wxTextCtrl* rateTextCtrl = wxDynamicCast(FindWindowById(IDVectors[i][2]), wxTextCtrl);
         if (rateTextCtrl){
-            rateValue = rateTextCtrl->GetValue().ToStdString();
-            message = message+rateValue+"\t";
+            rateValue = rateTextCtrl->GetValue();
+            if(rateValue=="\0"||rateValue=="0"){
+                continue;
+            }
 
         }
         wxTextCtrl* qtyTextCtrl = wxDynamicCast(FindWindowById(IDVectors[i][3]), wxTextCtrl);
         if (qtyTextCtrl){
-            qtyValue = qtyTextCtrl->GetValue().ToStdString();
-            message = message+qtyValue+"\n";
+            qtyValue = qtyTextCtrl->GetValue();
+            if(qtyValue=="\0"||qtyValue=="0"){
+                continue;
+            }
 
         }
-        DetailsVector.push_back(std::make_tuple(std::stoi(IDValue),nameValue,std::stoi(rateValue),std::stoi(qtyValue)));
+        message = message+IDValue+"\t\t"+namevar+rateValue+"\t\t"+qtyValue+"\n";
+        total += std::stoi(rateValue.ToStdString())*std::stoi(qtyValue.ToStdString());
+        Product p(std::stoi(IDValue.ToStdString()),nameValue.ToStdString(),std::stoi(rateValue.ToStdString()),std::stoi(qtyValue.ToStdString()));
+        DetailsVector.push_back(p);
     }
+    message = message+"\n\nTotal\t:\t"+std::to_string(total)+"\n";
     if (DetailsVector.empty()) {
         // std::cout << "detailsVector is empty!" << std::endl;
         wxMessageBox(_("Please Select any Item to Order"), "Confirm Order", wxOK | wxICON_NONE | wxOK_DEFAULT);
@@ -452,7 +464,7 @@ void BuyObjectFrame::ConfirmDetails(wxCommandEvent& event){
     else{
         int result = wxMessageBox(message, "Confirm Order", wxOK | wxCANCEL | wxICON_NONE | wxOK_DEFAULT);
         if (result == wxOK) {
-            BuyDetailsVector(DetailsVector);
+            BuyUpdateDB(DetailsVector);
             BuyObjectFrame* addFrame = new BuyObjectFrame(wxT("Byapar"),this->GetPosition(),wxSize(this->GetSize().GetWidth(),this->GetSize().GetHeight()));
             addFrame->Show(true);
             this->Close(true);

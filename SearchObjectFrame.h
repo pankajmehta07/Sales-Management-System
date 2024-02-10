@@ -208,7 +208,7 @@ void SearchObjectFrame::onClose(wxCloseEvent& event){
             return;
         }
     }
-    delete con;
+    // delete con;
     Destroy();
 }
 

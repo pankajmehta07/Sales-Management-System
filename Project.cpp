@@ -3,6 +3,8 @@
 #include<wx/textctrl.h>
 #include <wx/statline.h>
 #include <vector>
+#include <iomanip>
+#include <string>
 #include <map>
 #include <array>
 #include <tuple>
@@ -13,7 +15,7 @@
 #include"AddObjectFrame.h"
 #include"SellObjectFrame.h"
 #include"BuyObjectFrame.h"
-#include"ShowObjectFrame.h"
+// #include"ShowObjectFrame.h"
 // #include <iostream>
 // #include <mysql_driver.h>
 // #include <mysql_connection.h>
@@ -29,6 +31,7 @@ class myApp : public wxApp{
 wxIMPLEMENT_APP(myApp);
 bool myApp::OnInit(){
     // wxWindow::SetMinSize(500);
+    connectToDatabase();
     MenuFrame *Menuframe = new MenuFrame(wxT("Byapar"),wxPoint(50,50),wxSize(700,600));
     Menuframe -> Show(true);
     return true;
