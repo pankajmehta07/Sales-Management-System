@@ -43,9 +43,6 @@ class MenuFrame : public wxFrame{
 #include "SearchObjectFrame.h"
 class SearchObjectFrame;
 
-#include "AddObjectFrame.h"
-class AddObjectFrame;
-
 #include "BuyObjectFrame.h"
 class BuyObjectFrame;
 

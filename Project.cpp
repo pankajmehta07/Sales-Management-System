@@ -10,9 +10,7 @@
 #include <tuple>
 #include"id.h"
 #include"Database.h"
-#include"BuySellFunctions.h"
 #include"MenuFrame.h"
-#include"AddObjectFrame.h"
 #include"SellObjectFrame.h"
 #include"BuyObjectFrame.h"
 // #include"ShowObjectFrame.h"

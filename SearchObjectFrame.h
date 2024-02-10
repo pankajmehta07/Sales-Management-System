@@ -236,7 +236,7 @@ void SearchObjectFrame::SearchButtonClick(wxCommandEvent& event){
     else{
         display = 0;
         std::vector<Product> vector1;
-        vector1 = showItemDetails(name.ToStdString());
+        vector1 = SearchDetails(name.ToStdString());
         wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
         ContentSizer->Add(20,0);
         wxStaticText* text= new wxStaticText(contentPanel,wxID_ANY,wxT("ID"), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);

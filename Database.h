@@ -6,6 +6,7 @@
 #include <mysql_connection.h>
 #include <cppconn/statement.h>
 #include <cppconn/sqlstring.h>
+#include <cppconn/prepared_statement.h> 
 #include <tuple>
 
 sql::mysql::MySQL_Driver *driver;
@@ -142,9 +143,30 @@ void SellUpdateDB(std::vector<Product> products) {
         delete updateStmt;
     }
 }
+std::vector<Product> SearchDetails(const std::string& itemName) {
+    std::vector<Product> products;
+    try {
+        connectToDatabase();
+        wxString updateStr = wxString::Format("SELECT * FROM Inventory WHERE Name LIKE '%%%s%%'", itemName);
+        sql::PreparedStatement *stmt = con->prepareStatement(updateStr.ToStdString());
+        sql::ResultSet *res = stmt->executeQuery();
+        while (res->next()) {
+            Product p(res->getInt(1),res->getString(2),res->getInt(3),res->getInt(4));
+            products.push_back(p);
+
+        }
+
+        delete res;
+        delete stmt;
 
 
 
+    } catch (sql::SQLException &e) {
+        std::cerr << "MySQL error: " << e.what() << std::endl;
+    }
+    return products;
+
+}
 
 
 
