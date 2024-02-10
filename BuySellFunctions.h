@@ -4,13 +4,13 @@
 #include <cppconn/statement.h>
 #include"Product.h"
 
-wxArrayString getNameChoices(){
-    std::vector<std::string> objectList = {"Option 1","Option 2", "Option 3","Object 1","Object 2","Object 3", "Subject 1", "Subject 2", "Subject 3"};
-    wxArrayString choices;
-    for (const auto& obj : objectList)
-        choices.Add(obj);
-    return choices;
-}
+// wxArrayString getNameChoices(){
+//     std::vector<std::string> objectList = {"Option 1","Option 2", "Option 3","Object 1","Object 2","Object 3", "Subject 1", "Subject 2", "Subject 3"};
+//     wxArrayString choices;
+//     for (const auto& obj : objectList)
+//         choices.Add(obj);
+//     return choices;
+// }
 
 std::tuple<int, int> getProductDetailsOnNameGiven(const std::string& name) {
     /*
@@ -65,141 +65,131 @@ std::tuple<int, int> getProductDetailsOnNameGiven(const std::string& name) {
 }
 
 
-wxArrayString getIDChoices(){
-    std::vector<std::string> objectList = {"10001","10002", "10003","10004","10005","10006", "10007", "10008", "10009"};
-    wxArrayString choices;
-    for (const auto& obj : objectList)
-        choices.Add(obj);
-    return choices;
-}
+// std::tuple<int, int,int > getInventoryonName(const std::string& name) {
+//     /*
+//     This is a function in which the details of the product will be returned when the product ID is given as argument.
+//     Parameters:
+//     int id -> Product ID
+
+//     Returns:
+//     tuple -> (name and rate) of the product.
+//     */
 
 
 
-std::tuple<int, int,int > getInventoryonName(const std::string& name) {
-    /*
-    This is a function in which the details of the product will be returned when the product ID is given as argument.
-    Parameters:
-    int id -> Product ID
-
-    Returns:
-    tuple -> (name and rate) of the product.
-    */
-
-
-
-    int id = 10000;
-    int qty = 10;
-    int rate = 400;
-    if(name=="option 1"){
-        rate = 100;    
-        id = 10001;
-        qty = 12;
-    }
-    else if(name=="option 2"){
-        rate = 200;    
-        id = 10002;
-        qty = 1223;
-    }
-    else if(name=="option 3"){
-        rate = 300;    
-        id = 10003;
-        qty = 124;
-    }
-    else if(name=="object 1"){
-        rate = 1100;    
-        id = 10004;
-        qty = 13;
-    }
-    else if(name=="object 2"){
-        rate = 1200;    
-        id = 10005;
-        qty = 13;
-    }
-    else if(name=="object 3"){
-        rate = 1300;    
-        id = 10006;
-        qty = 154;
-    }
-    else if(name=="subject 1"){
-        rate = 2100;    
-        id = 10007;
-        qty = 165;
-    }
-    else if(name=="subject 2"){
-        rate = 2200;    
-        id = 10008;
-        qty = 1243;
-    }
-    else if(name=="subject 3"){
-        rate = 2300;    
-        id = 10009;
-        qty = 124;
-    }
-    return std::make_tuple(id, rate,qty);
-}
+//     int id = 10000;
+//     int qty = 10;
+//     int rate = 400;
+//     if(name=="option 1"){
+//         rate = 100;    
+//         id = 10001;
+//         qty = 12;
+//     }
+//     else if(name=="option 2"){
+//         rate = 200;    
+//         id = 10002;
+//         qty = 1223;
+//     }
+//     else if(name=="option 3"){
+//         rate = 300;    
+//         id = 10003;
+//         qty = 124;
+//     }
+//     else if(name=="object 1"){
+//         rate = 1100;    
+//         id = 10004;
+//         qty = 13;
+//     }
+//     else if(name=="object 2"){
+//         rate = 1200;    
+//         id = 10005;
+//         qty = 13;
+//     }
+//     else if(name=="object 3"){
+//         rate = 1300;    
+//         id = 10006;
+//         qty = 154;
+//     }
+//     else if(name=="subject 1"){
+//         rate = 2100;    
+//         id = 10007;
+//         qty = 165;
+//     }
+//     else if(name=="subject 2"){
+//         rate = 2200;    
+//         id = 10008;
+//         qty = 1243;
+//     }
+//     else if(name=="subject 3"){
+//         rate = 2300;    
+//         id = 10009;
+//         qty = 124;
+//     }
+//     return std::make_tuple(id, rate,qty);
+// }
 
 
-void SellDetailsVector(const std::vector<std::tuple<int, std::string, int, int>>& detailsVector) {
-    for (const auto& details : detailsVector) {
-        int IDValue = std::get<0>(details);
-        std::string nameValue = std::get<1>(details);
-        int rateValue = std::get<2>(details);
-        int qtyValue = std::get<3>(details);
+// void SellDetailsVector(const std::vector<std::tuple<int, std::string, int, int>>& detailsVector) {
+//     for (const auto& details : detailsVector) {
+//         int IDValue = std::get<0>(details);
+//         std::string nameValue = std::get<1>(details);
+//         int rateValue = std::get<2>(details);
+//         int qtyValue = std::get<3>(details);
 
-        // Process the details or print them
-        std::cout << "ID: " << IDValue << "\tName: " << nameValue
-                  << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
-    }
-}
+//         // Process the details or print them
+//         std::cout << "ID: " << IDValue << "\tName: " << nameValue
+//                   << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
+//     }
+// }
 
-void BuyUpdateDB(std::vector<Product>& buyVector) {
-    sql::mysql::MySQL_Driver *driver;
-    sql::Connection *con;
+// void BuyUpdateDB(std::vector<Product>& buyVector) {
+//     sql::mysql::MySQL_Driver *driver;
+//     sql::Connection *con;
 
-    try {
-        // Create a connection
-        driver = sql::mysql::get_mysql_driver_instance();
-        // con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
-        con = driver->connect("172.16.1.145:3306", "pankaj", "Pankaj");
+//     try {
+//         // Create a connection
+//         driver = sql::mysql::get_mysql_driver_instance();
+//         // con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
+//         con = driver->connect("172.16.1.145:3306", "pankaj", "Pankaj");
 
-        // Select the SMS database
-        con->setSchema("SMS");
-        for (auto& product : buyVector) {
-            std::tuple<int, std::string, int, int> details;
-            details = product.getInfo();
-            sql::Statement *check = con->createStatement();
-            std::string checkQuery = "SELECT COUNT(*) FROM Inventory WHERE ID=" + std::to_string(std::get<0>(details));
-            sql::ResultSet *result = check->executeQuery(checkQuery);
-            result->next();
-            int rowCount = result->getInt(1);
-            delete result;
-            delete check;
+//         // Select the SMS database
+//         con->setSchema("SMS");
+//         for (auto& product : buyVector) {
+//             std::tuple<int, std::string, int, int> details;
+//             details = product.getInfo();
+//             sql::Statement *check = con->createStatement();
+//             std::string checkQuery = "SELECT COUNT(*) FROM Inventory WHERE ID=" + std::to_string(std::get<0>(details));
+//             sql::ResultSet *result = check->executeQuery(checkQuery);
+//             result->next();
+//             int rowCount = result->getInt(1);
+//             delete result;
+//             delete check;
 
-            if (rowCount > 0) {
-                // Case 1: ID already in database, update the existing record
-                sql::Statement *updateStmt = con->createStatement();
-                wxString updateStr = wxString::Format("UPDATE Inventory SET Rate=%d, Quantity=%d WHERE ID=%d;", std::get<2>(details), std::get<3>(details), std::get<0>(details));
-                updateStmt->execute(updateStr.ToStdString());
-                delete updateStmt;
-                std::cout << "Item updated in Inventory successfully." << std::endl;
-            } else {
-                // Case 2: ID not in database, insert a new record
-                sql::Statement *insertStmt = con->createStatement();
-                wxString insertStr = wxString::Format("INSERT INTO Inventory (ID, Name, Rate, Quantity) VALUES (%d, \"%s\", %d, %d);", std::get<0>(details), std::get<1>(details), std::get<2>(details), std::get<3>(details));
-                insertStmt->execute(insertStr.ToStdString());
-                delete insertStmt;
-                std::cout << "Item added to Inventory successfully." << std::endl;
-            }
-        }
+//             if (rowCount > 0) {
+//                 // Case 1: ID already in database, update the existing record
+//                 sql::Statement *updateStmt = con->createStatement();
+//                 wxString updateStr = wxString::Format("UPDATE Inventory SET Rate=%d, Quantity=%d WHERE ID=%d;", std::get<2>(details), std::get<3>(details), std::get<0>(details));
+//                 updateStmt->execute(updateStr.ToStdString());
+//                 delete updateStmt;
+//                 std::cout << "Item updated in Inventory successfully." << std::endl;
+//             } else {
+//                 // Case 2: ID not in database, insert a new record
+//                 sql::Statement *insertStmt = con->createStatement();
+//                 wxString insertStr = wxString::Format("INSERT INTO Inventory (ID, Name, Rate, Quantity) VALUES (%d, \"%s\", %d, %d);", std::get<0>(details), std::get<1>(details), std::get<2>(details), std::get<3>(details));
+//                 insertStmt->execute(insertStr.ToStdString());
+//                 delete insertStmt;
+//                 std::cout << "Item added to Inventory successfully." << std::endl;
+//             }
+//         }
 
-    } catch (sql::SQLException &e) {
-        std::cerr << "MySQL error: " << e.what() << std::endl;
-        return;
-    }
+//     } catch (sql::SQLException &e) {
+//         std::cerr << "MySQL error: " << e.what() << std::endl;
+//         return;
+//     }
 
-    // Cleanup
-    delete con;
-}
+//     // Cleanup
+//     delete con;
+// }
 void BuyDetailsVector(std::vector<std::tuple<int, std::string, int, int>>& detailsVector) {
     std::vector<Product> buyVector;
     for (const auto& details : detailsVector) {
@@ -229,7 +219,7 @@ std::vector<std::tuple<int, std::string, int, int>> SearchDetails(std::string na
     vector1.push_back(std::make_tuple(100003, "option 3",300,350));
     return vector1;
 }
-void showItemDetails(const std::string& itemName) {
+// void showItemDetails(const std::string& itemName) {
     // sql::mysql::MySQL_Driver *driver;
     // sql::Connection *con;
 
@@ -268,12 +258,12 @@ void showItemDetails(const std::string& itemName) {
 
     // // Cleanup
     // delete con;
-    std::cout<<"Show Items Details";
+    // std::cout<<"Show Items Details";
 
-}
+// }
 
 
-void updateDatabase();
+// void updateDatabase();
 void ModifyDetails(const std::vector<std::tuple<int, std::string, int, int>>& detailsVector) {
     for (const auto& details : detailsVector) {
         int IDValue = std::get<0>(details);
@@ -285,48 +275,49 @@ void ModifyDetails(const std::vector<std::tuple<int, std::string, int, int>>& de
         std::cout << "ID: " << IDValue << "\tName: " << nameValue
                   << "\tRate: " << rateValue << "\tQuantity: " << qtyValue << std::endl;
     }
-    updateDatabase();
 }
-void updateDatabase(){
+//     updateDatabase();
+// }
+// void updateDatabase(){
      
-    sql::mysql::MySQL_Driver *driver;
-    sql::Connection *con;
+//     sql::mysql::MySQL_Driver *driver;
+//     sql::Connection *con;
 
-    try {
-        // Create a connection
-        driver = sql::mysql::get_mysql_driver_instance();
-        // con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
-        // con = driver->connect("172.16.1.145:3306", "pankaj", "Pankaj");
-        con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
+//     try {
+//         // Create a connection
+//         driver = sql::mysql::get_mysql_driver_instance();
+//         // con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
+//         // con = driver->connect("172.16.1.145:3306", "pankaj", "Pankaj");
+//         con = driver->connect("192.168.1.119:3306", "pankaj", "Pankaj");
         
 
-        // Use the 'con' connection object to perform MySQL operations
+//         // Use the 'con' connection object to perform MySQL operations
 
-        // Select the SMS database
-        con->setSchema("SMS");
+//         // Select the SMS database
+//         con->setSchema("SMS");
 
-        // Add an item to the 'Inventory' table
-        sql::Statement *stmt = con->createStatement();
-        int IDValue = 12421;
-        std::string nameValue = "Bottle";
-        int rateValue = 1300;
-        int qtyValue = 25;
-        wxString str = wxString::Format("UPDATE Inventory SET Rate=%d, Quantity=%d WHERE ID=%d and Name=\"%s\";", rateValue,qtyValue,IDValue,nameValue);
-        // wxString str = wxString::Format("INSERT INTO Inventory (ID,Name, Rate,Quantity) VALUES (%d,\"%s\",%d,%d)", IDValue,nameValue,rateValue,qtyValue);
+//         // Add an item to the 'Inventory' table
+//         sql::Statement *stmt = con->createStatement();
+//         int IDValue = 12421;
+//         std::string nameValue = "Bottle";
+//         int rateValue = 1300;
+//         int qtyValue = 25;
+//         wxString str = wxString::Format("UPDATE Inventory SET Rate=%d, Quantity=%d WHERE ID=%d and Name=\"%s\";", rateValue,qtyValue,IDValue,nameValue);
+//         // wxString str = wxString::Format("INSERT INTO Inventory (ID,Name, Rate,Quantity) VALUES (%d,\"%s\",%d,%d)", IDValue,nameValue,rateValue,qtyValue);
      
-        stmt->execute(str.ToStdString());
-        delete stmt;
+//         stmt->execute(str.ToStdString());
+//         delete stmt;
 
-        std::cout << "Item added to Inventory successfully." << std::endl;
+//         std::cout << "Item added to Inventory successfully." << std::endl;
 
-    } catch (sql::SQLException &e) {
-        std::cerr << "MySQL error: " << e.what() << std::endl;
-        return;
-    }
+//     } catch (sql::SQLException &e) {
+//         std::cerr << "MySQL error: " << e.what() << std::endl;
+//         return;
+//     }
 
-    // Cleanup
-    delete con;
-}
+//     // Cleanup
+//     delete con;
+// }
 // void BuyUpdateDB() {
 //     sql::mysql::MySQL_Driver *driver;
 //     sql::Connection *con;
