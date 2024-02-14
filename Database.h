@@ -1,13 +1,12 @@
 #ifndef DATABASE_FRAME
 #define DATABASE_FRAME
 #include"Product.h"
-#include <iostream>
 #include <mysql_driver.h>
 #include <mysql_connection.h>
 #include <cppconn/statement.h>
 #include <cppconn/sqlstring.h>
 #include <cppconn/prepared_statement.h> 
-#include <tuple>
+#include "txndetails.h"
 
 sql::mysql::MySQL_Driver *driver;
 sql::Connection *con;
@@ -16,6 +15,8 @@ void connectToDatabase(){
         driver = sql::mysql::get_mysql_driver_instance();
         // con = driver->connect("172.16.1.145:3306", "pankaj", "Pankaj");
         con = driver->connect("192.168.1.119", "pankaj", "Pankaj");
+        // con = driver->connect("192.168.1.138", "pankaj", "Pankaj");
+        // con = driver->connect("192.168.1.122", "admin", "admin");
         con->setSchema("SMS");
     } catch (sql::SQLException &e) {
         std::cerr << "SQLException: " << e.what() << std::endl;
@@ -65,12 +66,13 @@ Product getInventoryOnName(std::string name) {
     }
 
 void BuyUpdateDB(std::vector<Product>& buyVector) {
-
     try {
+        int total=0;
         for (auto& product : buyVector) {
             connectToDatabase();
             sql::Statement *check = con->createStatement();
-            std::string checkQuery = "SELECT COUNT(*) FROM Inventory WHERE ID=" + std::to_string(product.getID());
+            total += product.getRate()*product.getQty();
+            std::string checkQuery = "SELECT COUNT(*) FROM Inventory WHERE ID=" + std::to_string(product.getID())+" and Name=\""+product.getName()+"\";";
             sql::ResultSet *result = check->executeQuery(checkQuery);
             result->next();
             int rowCount = result->getInt(1);
@@ -81,19 +83,19 @@ void BuyUpdateDB(std::vector<Product>& buyVector) {
                 // Case 1: ID already in database, update the existing record
                 sql::Statement *updateStmt = con->createStatement();
                 Product p = getInventoryOnName(product.getName());
-                wxString updateStr = wxString::Format("UPDATE Inventory SET Quantity=%d WHERE ID=%d;", p.getQty()+product.getQty(), p.getID());
+                wxString updateStr = wxString::Format("UPDATE Inventory SET Quantity=%d WHERE ID=%d and Name=\"%s\";", p.getQty()+product.getQty(), p.getID(),p.getName());
                 updateStmt->execute(updateStr.ToStdString());
                 delete updateStmt;
-                std::cout << "Item updated in Inventory successfully." << std::endl;
             } else {
                 // Case 2: ID not in database, insert a new record
                 sql::Statement *insertStmt = con->createStatement();
                 std::string insertStr ="INSERT INTO Inventory (ID, Name, Rate, Quantity) VALUES ("+ std::to_string(product.getID())+",'"+ product.getName()+"',"+std::to_string(product.getRate())+","+std::to_string(product.getQty())+");";
                 insertStmt->execute(insertStr);
                 delete insertStmt;
-                std::cout << "Item added to Inventory successfully." << std::endl;
             }
         }
+        Transaction t(" Purchase ",total);
+        t.writeToFile();
 
     } catch (sql::SQLException &e) {
         std::cerr << "MySQL error: " << e.what() << std::endl;
@@ -132,16 +134,20 @@ std::tuple<bool,std::string>SellDetailsVector(std::vector<Product>& detailsVecto
 }
 void SellUpdateDB(std::vector<Product> products) {
             //  update the existing record
-            
+    int total=0;        
     for (auto& p : products){
         connectToDatabase();
-        // Product product = getInventoryOnName(p.getName());
         sql::Statement *updateStmt = con->createStatement();
-        // int qty = product.getQty()-p.getQty();
-        wxString updateStr = wxString::Format("UPDATE Inventory SET Quantity=%d WHERE ID=%d;", p.getQty(), p.getID());
+        Product product = getInventoryOnName(p.getName());
+        total += p.getRate()*(product.getQty()-p.getQty());
+        wxString updateStr = wxString::Format("UPDATE Inventory SET Quantity=%d WHERE ID=%d and Name=\"%s\";", p.getQty(), p.getID(),p.getName());
         updateStmt->execute(updateStr.ToStdString());
         delete updateStmt;
     }
+    Transaction t("   Sale   ",total);
+    t.writeToFile();
+
+    
 }
 std::vector<Product> SearchDetails(const std::string& itemName) {
     std::vector<Product> products;
