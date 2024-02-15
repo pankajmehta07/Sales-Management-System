@@ -86,7 +86,7 @@ BuyObjectFrame::BuyObjectFrame(const wxString& title,const wxPoint& pos,const wx
     SellerPanel->SetSizer(SellerPanelSizer);
 
 
-    wxStaticText* SellerName = new wxStaticText(SellerPanel,wxID_ANY,wxT("Seller Name"));
+    wxStaticText* SellerName = new wxStaticText(SellerPanel,wxID_ANY,wxT("All in One Store"));
     wxFont font1(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
     SellerName->SetFont(font1);
     SellerPanelSizer->Add(SellerName,1,wxALIGN_CENTER|wxALL,0);

@@ -125,7 +125,7 @@ std::tuple<bool,std::string>SellDetailsVector(std::vector<Product>& detailsVecto
             product.setQty(finalQty);
         }
         else{
-            return make_tuple(false,"Insufficient quantity of"+p.getName());
+            return make_tuple(false,"Insufficient quantity of "+p.getName());
         }
     }
     SellUpdateDB(detailsVector);
