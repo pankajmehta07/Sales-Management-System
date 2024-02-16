@@ -13,8 +13,8 @@ sql::Connection *con;
 void connectToDatabase(){
     try{
         driver = sql::mysql::get_mysql_driver_instance();
-        // con = driver->connect("172.16.1.145:3306", "pankaj", "Pankaj");
-        con = driver->connect("192.168.1.119", "pankaj", "Pankaj");
+        con = driver->connect("172.16.1.145", "pankaj", "Pankaj");
+        // con = driver->connect("192.168.1.119", "pankaj", "Pankaj");
         // con = driver->connect("192.168.1.138", "pankaj", "Pankaj");
         // con = driver->connect("192.168.1.122", "admin", "admin");
         con->setSchema("SMS");
