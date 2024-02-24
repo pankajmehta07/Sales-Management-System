@@ -13,10 +13,10 @@ sql::Connection *con;
 void connectToDatabase(){
     try{
         driver = sql::mysql::get_mysql_driver_instance();
-        con = driver->connect("172.16.1.145", "pankaj", "Pankaj");
+        // con = driver->connect("172.16.1.145", "pankaj", "Pankaj");
+        con = driver->connect("127.00.0.1", "pankaj", "Pankaj");
         // con = driver->connect("192.168.1.119", "pankaj", "Pankaj");
         // con = driver->connect("192.168.1.138", "pankaj", "Pankaj");
-        // con = driver->connect("192.168.1.122", "admin", "admin");
         con->setSchema("SMS");
     } catch (sql::SQLException &e) {
         std::cerr << "SQLException: " << e.what() << std::endl;
@@ -101,7 +101,6 @@ void BuyUpdateDB(std::vector<Product>& buyVector) {
         std::cerr << "MySQL error: " << e.what() << std::endl;
         return;
     }
-
 }
 
 
@@ -114,7 +113,6 @@ void updateDatabase(Product p) {
         delete stmt;
 }
 std::tuple<bool,std::string>SellDetailsVector(std::vector<Product>& detailsVector) {
-    std::vector<Product> products;
     Product p;
     for (auto& product : detailsVector) {
         
@@ -129,8 +127,7 @@ std::tuple<bool,std::string>SellDetailsVector(std::vector<Product>& detailsVecto
         }
     }
     SellUpdateDB(detailsVector);
-    return make_tuple(true,"Transaction Successful.");
-    
+    return make_tuple(true,"Transaction Successful."); 
 }
 void SellUpdateDB(std::vector<Product> products) {
             //  update the existing record
@@ -145,9 +142,7 @@ void SellUpdateDB(std::vector<Product> products) {
         delete updateStmt;
     }
     Transaction t("   Sale   ",total);
-    t.writeToFile();
-
-    
+    t.writeToFile(); 
 }
 std::vector<Product> SearchDetails(const std::string& itemName) {
     std::vector<Product> products;
@@ -173,20 +168,4 @@ std::vector<Product> SearchDetails(const std::string& itemName) {
     return products;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif

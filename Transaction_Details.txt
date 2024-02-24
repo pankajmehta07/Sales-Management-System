@@ -14,3 +14,6 @@
 2024/2/16   Purchase   400
 2024/2/16     Sale     250
 2024/2/16     Sale     250
+2024/2/24   Purchase   200
+2024/2/24   Purchase   600
+2024/2/25   Purchase   550

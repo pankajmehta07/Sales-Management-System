@@ -5,8 +5,6 @@
 #include"declarations.h"
 
 using namespace std;
-class Product;
-
 class Product{
     int ID,Rate,Quantity;
     std::string Name;
