@@ -24,6 +24,7 @@ class Transaction {
     string date;
     string type; // "sales" or "purchase"
     double totalAmount;
+
     public:
 
     Transaction(std::string t=" ",int total=0){
