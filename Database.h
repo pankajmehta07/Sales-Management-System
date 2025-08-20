@@ -13,10 +13,7 @@ sql::Connection *con;
 void connectToDatabase(){
     try{
         driver = sql::mysql::get_mysql_driver_instance();
-        // con = driver->connect("172.16.1.145", "pankaj", "Pankaj");
-        con = driver->connect("127.00.0.1", "pankaj", "Pankaj");
-        // con = driver->connect("192.168.1.119", "pankaj", "Pankaj");
-        // con = driver->connect("192.168.1.138", "pankaj", "Pankaj");
+        con = driver->connect("127.00.0.1", "username", "password");
         con->setSchema("SMS");
     } catch (sql::SQLException &e) {
         std::cerr << "SQLException: " << e.what() << std::endl;
@@ -130,7 +127,7 @@ std::tuple<bool,std::string>SellDetailsVector(std::vector<Product>& detailsVecto
     return make_tuple(true,"Transaction Successful."); 
 }
 void SellUpdateDB(std::vector<Product> products) {
-            //  update the existing record
+    //  update the existing record
     int total=0;        
     for (auto& p : products){
         connectToDatabase();

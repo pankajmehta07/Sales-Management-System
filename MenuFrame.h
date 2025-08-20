@@ -208,7 +208,6 @@ void MenuFrame::ModifyButtonClick(wxCommandEvent& event){
     ModifyInventory* addFrame = new ModifyInventory(wxT("Byapar"),this->GetPosition(),wxSize(this->GetSize().GetWidth(),this->GetSize().GetHeight()));
     addFrame->Show(true);
     this->Close(true);
-    // updateDatabase();
     
 }
 void MenuFrame::SellButtonClick(wxCommandEvent& event,wxFrame* frame){

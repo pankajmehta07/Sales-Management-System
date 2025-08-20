@@ -1,10 +1,6 @@
 #ifndef SELL_OBJECT_FRAME
 #define SELL_OBJECT_FRAME
-// #ifndef MENU_FRAME_H
-// class MenuFrame;
 #include"MenuFrame.h"
-// #endif
-
 class SellObjectFrame : public wxFrame{
     public:
         SellObjectFrame(const wxString& title,const wxPoint& pos,const wxSize& size);
@@ -47,7 +43,6 @@ wxEND_EVENT_TABLE();
 
 
 SellObjectFrame::SellObjectFrame(const wxString& title,const wxPoint& pos,const wxSize& size):wxFrame(NULL,wxID_ANY,title,pos,size){
-    // SetIcon(wxIcon(wxT("photo.ico")));
     SetMinSize(wxSize(750,540));
     
     wxMenu *menuFile = new wxMenu;
@@ -70,15 +65,11 @@ SellObjectFrame::SellObjectFrame(const wxString& title,const wxPoint& pos,const 
 
     SetMenuBar(menuBar);
 
-
-
-
     // Menu Contents
 
     wxBoxSizer* MainSizer = new wxBoxSizer(wxVERTICAL);
 
     wxPanel* SellerPanel = new wxPanel(this,wxID_ANY);
-    // SellerPanel->SetBackgroundColour(wxColour(120,23,123));
     MainSizer->Add(SellerPanel,0,wxEXPAND|wxALL);
 
     wxBoxSizer* SellerPanelSizer=new wxBoxSizer(wxVERTICAL);
@@ -109,7 +100,6 @@ SellObjectFrame::SellObjectFrame(const wxString& title,const wxPoint& pos,const 
     MainSizer->Add(separatorLine, 0, wxEXPAND | wxALL, 3);
     
     MyScrolledWindow* MenuPanel = new MyScrolledWindow(this,wxID_ANY);
-    // MenuPanel->SetBackgroundColour(wxColour(200,200,100));
     MainSizer->Add(MenuPanel,1,wxEXPAND);
     wxBoxSizer* MenuPanelSizer = new wxBoxSizer(wxVERTICAL);
     MenuPanel->SetSizer(MenuPanelSizer);
@@ -171,35 +161,25 @@ SellObjectFrame::SellObjectFrame(const wxString& title,const wxPoint& pos,const 
             OnIDEntered(event,IDTextCtrl);
         });
         ContentSizer->AddStretchSpacer();
-        // ids++;
-
+        
         // Create a combo box for the dropdown list
         wxComboBox* comboBox = new wxComboBox(contentPanel, id[1], wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN);
-        
-        // comboBox->Bind(wxEVT_CHAR, [this, comboBox](wxKeyEvent& event) {
-        //     OnCharEntered(event,comboBox);
-        // });
-        // End of Menu Section.
+      
         comboBox->SetHint("Name");
         ContentSizer->Add(comboBox,0,wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
-        // ids++;
         wxTextCtrl* RateTextCtrl = new wxTextCtrl(contentPanel,id[2],wxEmptyString, wxDefaultPosition, wxSize(100,35), 0,wxTextValidator(wxFILTER_DIGITS));
         RateTextCtrl->SetHint("Rate");
         ContentSizer->Add(RateTextCtrl,0,wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
-        // ids++;
         wxTextCtrl* QuantityTextCtrl = new wxTextCtrl(contentPanel,id[3],wxEmptyString, wxDefaultPosition,  wxSize(100,35), 0,wxTextValidator(wxFILTER_DIGITS));
         QuantityTextCtrl->SetHint("Qty:");
         ContentSizer->Add(QuantityTextCtrl,0,wxEXPAND|wxALL,5);
-        // ids++;
-
         
         comboBox->Bind(wxEVT_TEXT, [this, comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl](wxCommandEvent& event) {
         OnNameEntered(event,comboBox,IDTextCtrl,RateTextCtrl,QuantityTextCtrl);
         });
        
-
         contentPanelSizer->Add(ContentSizer, 0, wxEXPAND | wxRIGHT|wxLEFT, 20);
         count++;
     }
@@ -219,21 +199,17 @@ SellObjectFrame::SellObjectFrame(const wxString& title,const wxPoint& pos,const 
     AddItemSizer->Add(AddItemButton,0,wxRIGHT,20);
 
     AddItemButton->Bind(wxEVT_BUTTON, [this, contentPanel,contentPanelSizer,MenuPanel,MenuPanelSizer](wxCommandEvent& event) {
-            AddItem(contentPanel,contentPanelSizer,MenuPanel,MenuPanelSizer);
+        AddItem(contentPanel,contentPanelSizer,MenuPanel,MenuPanelSizer);
     });
     ShowItemButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
-            ConfirmDetails(event);
+        ConfirmDetails(event);
     });
     MenuButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
-            MenuButtonClick(this);
+        MenuButtonClick(this);
     });
-
-
-
 
     Centre();
     SetSizer(MainSizer);
-
 
     CreateStatusBar();
     SetStatusText(wxT("Status Bar"));
@@ -270,7 +246,7 @@ void SellObjectFrame::onClose(wxCloseEvent& event){
             return;
         }
     }
-    // delete con;`
+    // delete con
     Destroy();
 }
 
@@ -311,10 +287,6 @@ void SellObjectFrame::AddItem(wxPanel* panel,wxBoxSizer* panelSizer,MyScrolledWi
 
     wxComboBox* comboBox = new wxComboBox(panel, id[1], wxEmptyString, wxDefaultPosition, wxSize(350,35), choices, wxCB_DROPDOWN );
 
-    
-    // comboBox->Bind(wxEVT_CHAR, [this, comboBox](wxKeyEvent& event) {
-    //     OnCharEntered(event,comboBox);
-    // });
     comboBox->SetHint("Name");
     ContentSizer->Add(comboBox,0,wxEXPAND|wxALL,5);
     ContentSizer->AddStretchSpacer();
@@ -353,7 +325,6 @@ void SellObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,w
         {   
 
             filteredSuggestions.Add(choice);
-            // comboBox->Clear();
             if(comboBox->IsListEmpty()){
                 comboBox->Insert(filteredSuggestions,0);
             }
@@ -381,7 +352,6 @@ void SellObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,w
     ID->SetValue(wxString::Format("%d", 0));
     Rate->SetValue(wxString::Format("%d", 0));
     Quantity->SetValue(wxT("0"));
-    // comboBox->Clear();
     if(comboBox->IsListEmpty()){
         comboBox->Append(filteredSuggestions);
     }
@@ -392,8 +362,7 @@ void SellObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,w
         }
     }
     comboBox->Append(filteredSuggestions);
-    // comboBox->Set(filteredSuggestions);  // If this runs then no need to add the clear statement and all the above deleting loops and if conditions. Try this in windows.
-
+    
     event.Skip();
     
 }
@@ -401,7 +370,6 @@ void SellObjectFrame::OnNameEntered(wxCommandEvent& event,wxComboBox* comboBox,w
 void SellObjectFrame::OnIDEntered(wxCommandEvent& event,wxTextCtrl* ID){
     wxString enteredText = ID->GetValue();
     if(enteredText.length()>5){
-        // wxMessageBox(_("Greater than 6"));
         ID->SetValue(enteredText.substr(0, 5));
     }
     ID->SetInsertionPointEnd();
@@ -486,12 +454,9 @@ void SellObjectFrame::ConfirmDetails(wxCommandEvent& event){
             else{
                 wxMessageBox(std::get<1>(msg), "Transaction Status", wxOK | wxICON_NONE | wxOK_DEFAULT);
 
-            }
-            
+            }            
         }
-    }
-     
-    
+    }   
 
 }
 

@@ -40,7 +40,6 @@ class Transaction {
             return;
         }
 
-
         // Write transaction data to file
         outFile << this->date << "  "
                 << this->type << "  "

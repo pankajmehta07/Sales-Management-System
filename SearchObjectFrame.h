@@ -1,9 +1,6 @@
 #ifndef SEARCH_OBJECT_FRAME
 #define SEARCH_OBJECT_FRAME
-// #ifndef MENU_FRAME_H
-// class MenuFrame;
 #include"MenuFrame.h"
-// #endif
 
 class SearchObjectFrame : public wxFrame{
     public:
@@ -13,10 +10,8 @@ class SearchObjectFrame : public wxFrame{
     int display =1;
     wxTextCtrl* Name;
     MyScrolledWindow* MenuPanel;
-    // wxPanel* contentPanel;
     wxPanel* contentPanel;
     wxBoxSizer* MenuPanelSizer;
-    // wxBoxSizer* contentPanelSizer;
     wxBoxSizer* contentPanelSizer;
     wxTextCtrl* textCtrl;
     int count=1, nameid, rateid, qtyid;
@@ -50,7 +45,6 @@ wxEND_EVENT_TABLE();
 
 
 SearchObjectFrame::SearchObjectFrame(const wxString& title,const wxPoint& pos,const wxSize& size):wxFrame(NULL,wxID_ANY,title,pos,size){
-    // SetIcon(wxIcon(wxT("photo.ico")));
     SetMinSize(wxSize(750,540));
     
     wxMenu *menuFile = new wxMenu;
@@ -73,15 +67,11 @@ SearchObjectFrame::SearchObjectFrame(const wxString& title,const wxPoint& pos,co
 
     SetMenuBar(menuBar);
 
-
-
-
     // Menu Contents
 
     wxBoxSizer* MainSizer = new wxBoxSizer(wxVERTICAL);
 
     wxPanel* SellerPanel = new wxPanel(this,wxID_ANY);
-    // SellerPanel->SetBackgroundColour(wxColour(120,23,123));
     MainSizer->Add(SellerPanel,0,wxEXPAND|wxALL);
 
     wxBoxSizer* SellerPanelSizer=new wxBoxSizer(wxVERTICAL);
@@ -112,7 +102,6 @@ SearchObjectFrame::SearchObjectFrame(const wxString& title,const wxPoint& pos,co
     MainSizer->Add(separatorLine, 0, wxEXPAND | wxALL, 3);
     
     MenuPanel = new MyScrolledWindow(this,wxID_ANY);
-    // MenuPanel->SetBackgroundColour(wxColour(200,200,100));
     MainSizer->Add(MenuPanel,1,wxEXPAND);
     MenuPanelSizer = new wxBoxSizer(wxVERTICAL);
     MenuPanel->SetSizer(MenuPanelSizer);
@@ -143,14 +132,13 @@ SearchObjectFrame::SearchObjectFrame(const wxString& title,const wxPoint& pos,co
     Name->Bind(wxEVT_TEXT, [this](wxCommandEvent& event) {
             SearchTextEnter(event);
         });
-    // ContentSizer->AddStretchSpacer();
     ContentSizer->Add(50,0);
     wxButton* SearchObjectButton = new wxButton(contentPanel,menu::searchButtonId, "Search", wxDefaultPosition, wxSize(100,35), wxBORDER_NONE | wxBU_EXACTFIT);
     SearchObjectButton->SetBitmap(searchIcon);
     SearchObjectButton->SetToolTip("Search");
     ContentSizer->Add(SearchObjectButton,0,wxCENTER,5);
     SearchObjectButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
-            SearchButtonClick(event);
+        SearchButtonClick(event);
     });
     contentPanelSizer->Add(ContentSizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL,5);
 
@@ -163,7 +151,7 @@ SearchObjectFrame::SearchObjectFrame(const wxString& title,const wxPoint& pos,co
     AddItemSizer->AddStretchSpacer();
     
     MenuButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
-            MenuButtonClick(this);
+        MenuButtonClick(this);
     });
 
 
@@ -220,7 +208,6 @@ void SearchObjectFrame::MenuButtonClick(wxFrame* frame){
 }
 
 void SearchObjectFrame::SearchTextEnter(wxCommandEvent& event){
-//  wxString name = Name->GetValue(); 
     if(!display){
         SearchObjectFrame* addFrame = new SearchObjectFrame(wxT("Byapar"),this->GetPosition(),wxSize(this->GetSize().GetWidth(),this->GetSize().GetHeight()));
         addFrame->Show(true);
@@ -240,11 +227,9 @@ void SearchObjectFrame::SearchButtonClick(wxCommandEvent& event){
         wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
         ContentSizer->Add(20,0);
         wxStaticText* text= new wxStaticText(contentPanel,wxID_ANY,wxT("ID"), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
-        // text->SetFont(font2);
         ContentSizer->Add(text,0,wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
         text = new wxStaticText(contentPanel,wxID_ANY,wxT("Product Name"), wxDefaultPosition, wxSize(350, 18), wxALIGN_CENTER);
-        // text->SetFont(font2);
         ContentSizer->Add(text,0,wxEXPAND|wxALL,5);
         ContentSizer->AddStretchSpacer();
         text = new wxStaticText(contentPanel,wxID_ANY,wxT("Rate"), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
@@ -271,11 +256,9 @@ void SearchObjectFrame::SearchButtonClick(wxCommandEvent& event){
             wxBoxSizer* ContentSizer=new wxBoxSizer(wxHORIZONTAL);
             ContentSizer->Add(20,0);
             wxStaticText* text= new wxStaticText(contentPanel,wxID_ANY,wxString::Format("%d", id), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);
-            // text->SetFont(font2);
             ContentSizer->Add(text,0,wxEXPAND|wxALL,5);
             ContentSizer->AddStretchSpacer();
             text = new wxStaticText(contentPanel,wxID_ANY,wxString::FromUTF8(name.c_str()), wxDefaultPosition, wxSize(350, 18), wxALIGN_CENTER);
-            // text->SetFont(font2);
             ContentSizer->Add(text,0,wxEXPAND|wxALL,5);
             ContentSizer->AddStretchSpacer();
             text = new wxStaticText(contentPanel,wxID_ANY,wxString::Format("%d", rate), wxDefaultPosition, wxSize(100, 18), wxALIGN_CENTER);

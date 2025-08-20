@@ -1,10 +1,7 @@
 
 #ifndef MODIFY_INVENTORY
 #define MODIFY_INVENTORY
-// #ifndef MENU_FRAME_H
-// class MenuFrame;
 #include"MenuFrame.h"
-// #endif
 
 class ModifyInventory : public wxFrame{
     public:
@@ -53,7 +50,6 @@ wxEND_EVENT_TABLE();
 
 
 ModifyInventory::ModifyInventory(const wxString& title,const wxPoint& pos,const wxSize& size):wxFrame(NULL,wxID_ANY,title,pos,size){
-    // SetIcon(wxIcon(wxT("photo.ico")));
     SetMinSize(wxSize(750,540));
     
     wxMenu *menuFile = new wxMenu;
@@ -84,7 +80,6 @@ ModifyInventory::ModifyInventory(const wxString& title,const wxPoint& pos,const 
     wxBoxSizer* MainSizer = new wxBoxSizer(wxVERTICAL);
 
     wxPanel* SellerPanel = new wxPanel(this,wxID_ANY);
-    // SellerPanel->SetBackgroundColour(wxColour(120,23,123));
     MainSizer->Add(SellerPanel,0,wxEXPAND|wxALL);
 
     wxBoxSizer* SellerPanelSizer=new wxBoxSizer(wxVERTICAL);
@@ -115,7 +110,6 @@ ModifyInventory::ModifyInventory(const wxString& title,const wxPoint& pos,const 
     MainSizer->Add(separatorLine, 0, wxEXPAND | wxALL, 3);
     
     MyScrolledWindow* MenuPanel = new MyScrolledWindow(this,wxID_ANY);
-    // MenuPanel->SetBackgroundColour(wxColour(200,200,100));
     MainSizer->Add(MenuPanel,1,wxEXPAND);
     wxBoxSizer* MenuPanelSizer = new wxBoxSizer(wxVERTICAL);
     MenuPanel->SetSizer(MenuPanelSizer);
@@ -150,11 +144,9 @@ ModifyInventory::ModifyInventory(const wxString& title,const wxPoint& pos,const 
     contentPanelSizer = new wxBoxSizer(wxVERTICAL);
     contentPanel->SetSizer(contentPanelSizer);
     
-    // contentPanelSizer->Add(0,50);
     ContentSizer=new wxBoxSizer(wxHORIZONTAL);
     IDText = new wxStaticText(contentPanel,wxID_ANY,wxT("Product ID : "), wxDefaultPosition, wxSize(100, 35));
     ContentSizer->Add(IDText,0,wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL,5);
-    // ContentSizer->Add(50,0);
     contentPanelSizer->Add(ContentSizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
     contentPanelSizer->Add(0,20);
 
@@ -183,7 +175,7 @@ ModifyInventory::ModifyInventory(const wxString& title,const wxPoint& pos,const 
     contentPanelSizer->Add(ContentSizer, 0, wxCENTER, 5);
     UpdateButton->Enable(false);
     UpdateButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event) {
-            UpdateButtonClick(event);
+        UpdateButtonClick(event);
     });
 
     wxPanel* AddItemPanel = new wxPanel(MenuPanel,wxID_ANY);
@@ -209,7 +201,6 @@ ModifyInventory::ModifyInventory(const wxString& title,const wxPoint& pos,const 
 
     CreateStatusBar();
     SetStatusText(wxT("Status Bar"));
-    // hideContentSizer();
 }
 
 
@@ -225,7 +216,6 @@ void ModifyInventory::OnHello(wxCommandEvent& event)
 
 void ModifyInventory::OnAbout(wxCommandEvent& event)
 {
-    // updateDatabase();
     wxString msg;
     msg.Printf(wxT("This is the Sales Management Software"));
     wxMessageBox(msg, wxT("About Package"), wxOK | wxICON_INFORMATION, this);
@@ -265,7 +255,6 @@ void ModifyInventory::MenuButtonClick(wxFrame* frame){
 
 void ModifyInventory::OnNameEntered(wxCommandEvent& event){
     wxString enteredText = comboBox->GetValue();
-    // wxArrayString filteredSuggestions;
     for (size_t i = 0; i < choices.GetCount(); i++){
         wxString choice = choices[i];
         if (choice.Lower()==enteredText.Lower())
@@ -300,7 +289,6 @@ void ModifyInventory::OnNameEntered(wxCommandEvent& event){
 
 void ModifyInventory::UpdateButtonClick(wxCommandEvent& event){
     wxString enteredText = comboBox->GetValue();
-    // std::vector<std::tuple<int, std::string,int, int>> DetailsVector;
     
     int qtyValue,rateValue;
     if(qtyCtrl->GetValue()!=""){
@@ -315,7 +303,6 @@ void ModifyInventory::UpdateButtonClick(wxCommandEvent& event){
     else{
          rateValue = rate;
     }
-    // DetailsVector.push_back(std::make_tuple(id,enteredText.ToStdString(),rateValue,qtyValue));
     Product p(id,enteredText.ToStdString(),rateValue,qtyValue);
     updateDatabase(p);
     ModifyInventory* addFrame = new ModifyInventory(wxT("Byapar"),this->GetPosition(),wxSize(this->GetSize().GetWidth(),this->GetSize().GetHeight()));
